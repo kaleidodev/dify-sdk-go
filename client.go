@@ -25,7 +25,7 @@ func NewClient(config *ClientConfig) (*base.Client, error) {
 
 	var httpClient = &http.Client{}
 
-	if config.Timeout == 0 {
+	if config.Timeout <= 0 {
 		config.Timeout = defaultTimeout
 	}
 	httpClient.Timeout = config.Timeout
