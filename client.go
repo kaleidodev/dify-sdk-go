@@ -1,7 +1,6 @@
 package dify
 
 import (
-	"errors"
 	"net/http"
 	"time"
 
@@ -19,11 +18,7 @@ type ClientConfig struct {
 
 const defaultTimeout = 300 * time.Second
 
-func NewClient(config *ClientConfig) (*base.Client, error) {
-	if config == nil {
-		return nil, errors.New("config cannot be nil")
-	}
-
+func NewClient(config ClientConfig) (*base.Client, error) {
 	var httpClient = &http.Client{}
 
 	if config.Timeout <= 0 {

@@ -21,23 +21,23 @@ type ClientInterface interface {
 // AppCommon 应用通用函数
 type AppCommon interface {
 	GetUser() string
-	
+
 	UploadFile(filePath string, f *os.File, user string) (info types.FileInfo, err error)
-	AppInfo() (resp *types.AppInfo, err error)
-	AppParameter() (resp *types.AppParameter, err error)
+	AppInfo() (resp types.AppInfo, err error)
+	AppParameter() (resp types.AppParameter, err error)
 }
 
 // Chatbot Chatbot和Agent类型应用
 type Chatbot interface {
 	AppCommon
-	MsgFeedback(feedback *types.FeedbackReq) error
+	MsgFeedback(feedback types.FeedbackReq) error
 	SuggestQuestionList(messageId, user string) (suggest []string, err error)
 	History(conversationId, user string) (resp types.MessageHistory, err error)
 	HistoryPro(conversationId, user, firstId string, limit int64) (resp types.MessageHistory, err error)
 	ConversationList(user string) (resp types.ConversationListResp, err error)
 	ConversationListPro(user, lastId, sortBy string, limit int64) (resp types.ConversationListResp, err error)
 	ConversationDel(conversationId, user string) error
-	ConversationRename(rename *types.ConversationRenameReq) (resp types.ConversationRenameResp, err error)
+	ConversationRename(rename types.ConversationRenameReq) (resp types.ConversationRenameResp, err error)
 	AudioToText(filePath string, f *os.File, user string) (text string, err error)
 	TextToAudio(info types.Text2Audio) error
 	AppMeta() (resp types.AppMeta, err error)
@@ -46,21 +46,21 @@ type Chatbot interface {
 // Completion 类型应用
 type Completion interface {
 	AppCommon
-	MsgFeedback(feedback *types.FeedbackReq) error
+	MsgFeedback(feedback types.FeedbackReq) error
 	TextToAudio(info types.Text2Audio) error
 }
 
 // Chatflow  类型应用
 type Chatflow interface {
 	AppCommon
-	MsgFeedback(feedback *types.FeedbackReq) error
+	MsgFeedback(feedback types.FeedbackReq) error
 	SuggestQuestionList(messageId, user string) (suggest []string, err error)
 	History(conversationId, user string) (resp types.MessageHistory, err error)
 	HistoryPro(conversationId, user, firstId string, limit int64) (resp types.MessageHistory, err error)
 	ConversationList(user string) (resp types.ConversationListResp, err error)
 	ConversationListPro(user, lastId, sortBy string, limit int64) (resp types.ConversationListResp, err error)
 	ConversationDel(conversationId, user string) error
-	ConversationRename(rename *types.ConversationRenameReq) (resp types.ConversationRenameResp, err error)
+	ConversationRename(rename types.ConversationRenameReq) (resp types.ConversationRenameResp, err error)
 	AudioToText(filePath string, f *os.File, user string) (text string, err error)
 	TextToAudio(info types.Text2Audio) error
 	AppMeta() (resp types.AppMeta, err error)

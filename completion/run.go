@@ -10,7 +10,7 @@ import (
 )
 
 // Run 发送对话消息(流式)
-func (c *App) Run(ctx context.Context, req *types.CompletionRequest) (chan types.ChunkChatCompletionResponse, error) {
+func (c *App) Run(ctx context.Context, req types.CompletionRequest) (chan types.ChunkChatCompletionResponse, error) {
 	req.ResponseMode = "streaming"
 
 	if req.User == "" {

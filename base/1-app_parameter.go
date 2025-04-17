@@ -2,12 +2,13 @@ package base
 
 import (
 	"context"
-	"github.com/safejob/dify-sdk-go/types"
 	"net/http"
+
+	"github.com/safejob/dify-sdk-go/types"
 )
 
 // AppParameter 获取应用参数
-func (c *AppClient) AppParameter() (resp *types.AppParameter, err error) {
+func (c *AppClient) AppParameter() (resp types.AppParameter, err error) {
 
 	httpReq, err := (*Client)(c).HttpClient().CreateBaseRequest(context.Background(), http.MethodGet, "/parameters", nil)
 	if err != nil {

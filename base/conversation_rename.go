@@ -9,7 +9,7 @@ import (
 )
 
 // ConversationRename 会话重命名
-func (c *AppClient) ConversationRename(rename *types.ConversationRenameReq) (resp types.ConversationRenameResp, err error) {
+func (c *AppClient) ConversationRename(rename types.ConversationRenameReq) (resp types.ConversationRenameResp, err error) {
 	if rename.User == "" {
 		rename.User = c.GetUser()
 	}

@@ -1,6 +1,8 @@
 # dify-sdk-go
 
-dify SDK的go语言版本(dify版本 >= 1.1.3)
+dify SDK的go语言版本(dify版本 >= 1.1.3,低版本未测试)
+使用go官方自带库构建，无任何三方库依赖
+囊括dify应用的所有接口
 
 ### Dify应用类型
 
@@ -59,12 +61,12 @@ type ClientConfig struct {
 	Timeout   time.Duration // 超时时间,默认300秒
 	Transport *http.Transport
 }
-NewClient(config *ClientConfig) (*base.Client, error) 
+NewClient(config ClientConfig) (*base.Client, error) 
 ```
 ClientConfig有两个必填参数ApiServer和ApiKey，由于很多接口都需要传入User参数，所以建议在创建客户端时同时把User的值也设置了，这样后面使用时，遇到User参数的地方可以传入空字符串。
 其他参数可以根据需要进行设置，所以我们可以这样构建一个客户端：
 ```golang
-    client,err:=dify.NewClient(&dify.ClientConfig{
+    client,err:=dify.NewClient(dify.ClientConfig{
 		ApiServer: "http://your.domain/v1",
 		ApiKey:    "your-api-key",
 		User: "demo-client",
@@ -94,7 +96,7 @@ import (
 
 func main() {
 	// 构建客户端 
-	client,err:=dify.NewClient(&dify.ClientConfig{
+	client,err:=dify.NewClient(dify.ClientConfig{
 		ApiServer: "http://your.domain/v1",
 		ApiKey:    "your-api-key",
 		User: "demo-client",
@@ -112,7 +114,7 @@ func main() {
 	
 	// 阻塞式调用示例
 	ctx := context.Background()
-	resp, err := client.AgentApp().RunBlock(ctx, &types.ChatRequest{
+	resp, err := client.AgentApp().RunBlock(ctx, types.ChatRequest{
 		Query: "请帮我生成五一假期的出行计划",
 	})
 	if err != nil {
@@ -127,4 +129,8 @@ func main() {
 ```golang
 
 ```
+
+### 待完善的功能
+1、文字转语音接口(没有模型供调试)
+2、语音转文字接口
 
