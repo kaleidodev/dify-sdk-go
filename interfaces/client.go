@@ -20,6 +20,8 @@ type ClientInterface interface {
 
 // AppCommon 应用通用函数
 type AppCommon interface {
+	GetUser() string
+	
 	UploadFile(filePath string, f *os.File, user string) (info types.FileInfo, err error)
 	AppInfo() (resp *types.AppInfo, err error)
 	AppParameter() (resp *types.AppParameter, err error)

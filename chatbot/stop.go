@@ -8,6 +8,10 @@ import (
 
 // Stop 停止响应
 func (c *App) Stop(taskId, user string) error {
+	if user == "" {
+		user = c.GetUser()
+	}
+	
 	type Data struct {
 		User string `json:"user"`
 	}

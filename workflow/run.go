@@ -13,6 +13,10 @@ import (
 func (c *App) Run(ctx context.Context, req *types.WorkflowRequest) (chan types.ChunkChatCompletionResponse, error) {
 	req.ResponseMode = "streaming"
 
+	if req.User == "" {
+		req.User = c.GetUser()
+	}
+
 	httpResp, err := c.client.SendRawRequest(ctx, http.MethodPost, "/workflows/run", req)
 	if err != nil {
 		return nil, err

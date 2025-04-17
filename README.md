@@ -54,17 +54,20 @@ Client的配置定义在dify.ClientConfig这个结构体中：
 type ClientConfig struct {
 	ApiServer string        // [必填]API服务器 eg: http://your.domain.com/v1 注意是包括/v1的
 	ApiKey    string        // [必填]API密钥
+	User      string        // 用户标识 部分接口需要传入用户标识,这里设置后,调用接口时user字段可留空
 	Debug     bool          // 是否打印原始请求及响应
 	Timeout   time.Duration // 超时时间,默认300秒
 	Transport *http.Transport
 }
 NewClient(config *ClientConfig) (*base.Client, error) 
 ```
-ClientConfig有两个必填参数ApiServer和ApiKey，其他三个参数可以根据需要进行设置，所以我们可以这样构建一个客户端
+ClientConfig有两个必填参数ApiServer和ApiKey，由于很多接口都需要传入User参数，所以建议在创建客户端时同时把User的值也设置了，这样后面使用时，遇到User参数的地方可以传入空字符串。
+其他参数可以根据需要进行设置，所以我们可以这样构建一个客户端：
 ```golang
     client,err:=dify.NewClient(&dify.ClientConfig{
 		ApiServer: "http://your.domain/v1",
 		ApiKey:    "your-api-key",
+		User: "demo-client",
 	})
 	if err != nil {
 		log.Fatalf("Error creating client: %v", err)
@@ -90,10 +93,11 @@ import (
 )
 
 func main() {
-	// 构建客户端
-    client,err:=dify.NewClient(&dify.ClientConfig{
+	// 构建客户端 
+	client,err:=dify.NewClient(&dify.ClientConfig{
 		ApiServer: "http://your.domain/v1",
 		ApiKey:    "your-api-key",
+		User: "demo-client",
 	})
 	if err != nil {
 		log.Fatalf("Error creating client: %v", err)
@@ -110,7 +114,6 @@ func main() {
 	ctx := context.Background()
 	resp, err := client.AgentApp().RunBlock(ctx, &types.ChatRequest{
 		Query: "请帮我生成五一假期的出行计划",
-		User:  "demo-client",
 	})
 	if err != nil {
 		log.Fatalf("Error running client: %v", err)

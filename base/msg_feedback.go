@@ -10,6 +10,10 @@ import (
 
 // MsgFeedback 消息反馈（点赞）
 func (c *AppClient) MsgFeedback(feedback *types.FeedbackReq) error {
+	if feedback.User == "" {
+		feedback.User = c.GetUser()
+	}
+
 	type Resp struct {
 		Result string `json:"result"`
 	}

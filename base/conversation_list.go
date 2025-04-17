@@ -10,12 +10,20 @@ import (
 
 // ConversationList 获取会话列表
 func (c *AppClient) ConversationList(user string) (resp types.ConversationListResp, err error) {
+	if user == "" {
+		user = c.GetUser()
+	}
+
 	return c.ConversationListPro(user, "", "", 20)
 }
 
 // ConversationListPro 获取会话列表
 // sortBt 默认 -updated_at(按更新时间倒序排列) 可选值：created_at, -created_at, updated_at, -updated_at  -代表倒序
 func (c *AppClient) ConversationListPro(user, lastId, sortBy string, limit int64) (resp types.ConversationListResp, err error) {
+	if user == "" {
+		user = c.GetUser()
+	}
+	
 	if limit <= 0 {
 		limit = 20
 	}

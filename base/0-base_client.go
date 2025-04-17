@@ -17,6 +17,7 @@ import (
 type Client struct {
 	apiServer  string
 	apiKey     string
+	user       string
 	debug      bool
 	timeout    time.Duration
 	httpClient *http.Client
@@ -25,7 +26,7 @@ type Client struct {
 type HttpClient Client
 type AppClient Client
 
-func NewClient(apiServer string, apiKey string, debug bool, timeout time.Duration, httpClient *http.Client) (*Client, error) {
+func NewClient(apiServer, apiKey, user string, debug bool, timeout time.Duration, httpClient *http.Client) (*Client, error) {
 	if apiServer == "" {
 		return nil, errors.New("apiServer is required")
 	}
@@ -42,6 +43,7 @@ func NewClient(apiServer string, apiKey string, debug bool, timeout time.Duratio
 	return &Client{
 		apiServer:  strings.TrimRight(apiServer, "/"),
 		apiKey:     apiKey,
+		user:       user,
 		debug:      debug,
 		timeout:    timeout,
 		httpClient: httpClient,

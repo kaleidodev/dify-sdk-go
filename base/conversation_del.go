@@ -8,6 +8,10 @@ import (
 
 // ConversationDel 删除会话
 func (c *AppClient) ConversationDel(conversationId, user string) error {
+	if user == "" {
+		user = c.GetUser()
+	}
+
 	type Data struct {
 		User string `json:"user"`
 	}

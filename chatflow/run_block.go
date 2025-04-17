@@ -11,6 +11,10 @@ import (
 func (c *App) RunBlock(ctx context.Context, req *types.ChatRequest) (resp *types.ChatCompletionResponse, err error) {
 	req.ResponseMode = "blocking"
 
+	if req.User == "" {
+		req.User = c.GetUser()
+	}
+
 	if req.Inputs == nil {
 		req.Inputs = make(map[string]interface{})
 	}

@@ -12,6 +12,10 @@ import (
 func (c *App) RunBlock(ctx context.Context, req *types.ChatRequest) (resp *types.ChatCompletionResponse, err error) {
 	req.ResponseMode = "blocking"
 
+	if req.User == "" {
+		req.User = c.GetUser()
+	}
+
 	if c.appType == AppTypeAgent {
 		err = errors.New("agent app does not support blocking")
 		return

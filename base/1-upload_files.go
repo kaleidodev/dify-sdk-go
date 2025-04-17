@@ -17,6 +17,10 @@ import (
 )
 
 func (c *AppClient) UploadFile(filePath string, f *os.File, user string) (info types.FileInfo, err error) {
+	if user == "" {
+		user = c.GetUser()
+	}
+
 	var file *os.File
 
 	// 确定使用哪个文件对象

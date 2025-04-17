@@ -13,6 +13,10 @@ import (
 func (c *App) Run(ctx context.Context, req *types.CompletionRequest) (chan types.ChunkChatCompletionResponse, error) {
 	req.ResponseMode = "streaming"
 
+	if req.User == "" {
+		req.User = c.GetUser()
+	}
+
 	if req.Inputs == nil {
 		req.Inputs = make(map[string]interface{})
 	}

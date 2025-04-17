@@ -10,11 +10,19 @@ import (
 
 // History 获取会话历史消息(倒序返回20条)
 func (c *AppClient) History(conversationId, user string) (resp types.MessageHistory, err error) {
+	if user == "" {
+		user = c.GetUser()
+	}
+
 	return c.HistoryPro(conversationId, user, "", 20)
 }
 
 // HistoryPro 获取会话历史消息(倒序返回limit条)
 func (c *AppClient) HistoryPro(conversationId, user, firstId string, limit int64) (resp types.MessageHistory, err error) {
+	if user == "" {
+		user = c.GetUser()
+	}
+	
 	if limit <= 0 {
 		limit = 20
 	}

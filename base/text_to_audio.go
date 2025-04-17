@@ -9,6 +9,9 @@ import (
 
 // TextToAudio 文字转语音
 func (c *AppClient) TextToAudio(info types.Text2Audio) error {
+	if info.User == "" {
+		info.User = c.GetUser()
+	}
 	type Resp struct {
 		Result string `json:"result"`
 	}

@@ -8,6 +8,10 @@ import (
 
 // SuggestQuestionList 获取下一轮建议问题列表(应用需要开启下一步问题建议)
 func (c *AppClient) SuggestQuestionList(messageId, user string) (suggest []string, err error) {
+	if user == "" {
+		user = c.GetUser()
+	}
+	
 	type Resp struct {
 		Result string   `json:"result"`
 		Data   []string `json:"data"`

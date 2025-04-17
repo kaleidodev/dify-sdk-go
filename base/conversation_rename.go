@@ -10,6 +10,10 @@ import (
 
 // ConversationRename 会话重命名
 func (c *AppClient) ConversationRename(rename *types.ConversationRenameReq) (resp types.ConversationRenameResp, err error) {
+	if rename.User == "" {
+		rename.User = c.GetUser()
+	}
+
 	type RenameParm struct {
 		Name         string `json:"name,omitempty"`
 		AutoGenerate bool   `json:"auto_generate,omitempty"`
