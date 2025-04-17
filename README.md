@@ -44,8 +44,8 @@ Dify一共有5种应用类型，具体如下：
 | 获取会话列表           | ConversationList/ConversationListPro | 1             |            | 1        |          | GET`/conversations`                         |
 | 删除会话               | ConversationDel                      | 1             |            | 1        |          | DELETE`/conversations/:conversation_id`     |
 | 会话重命名             | ConversationRename                   | 1             |            | 1        |          | POST`/conversations/:conversation_id/name`  |
-| 语音转文字             | AudioToText                          | 1             | 1          | 1        |          | POST`/audio-to-text`                        |
-| 文字转语音             | TextToAudio                          | 1             |            | 1        |          | POST`/text-to-audio`                        |
+| 语音转文字             | AudioToText                          | 1             |            | 1        |          | POST`/audio-to-text`                        |
+| 文字转语音             | TextToAudio                          | 1             | 1          | 1        |          | POST`/text-to-audio`                        |
 | 获取应用Meta信息       | AppMeta                              | 1             |            | 1        |          | GET`/meta`                                  |
 | --                     |                                      |               |            |          |          |                                              |
 
