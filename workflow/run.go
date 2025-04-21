@@ -11,6 +11,10 @@ import (
 
 // Run 发送对话消息(流式)
 func (c *App) Run(ctx context.Context, req types.WorkflowRequest) (chan types.ChunkChatCompletionResponse, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	req.ResponseMode = "streaming"
 
 	if req.User == "" {
@@ -31,6 +35,10 @@ func (c *App) Run(ctx context.Context, req types.WorkflowRequest) (chan types.Ch
 }
 
 func (c *App) chatMessagesStreamHandle(ctx context.Context, dataChan chan []byte, streamChannel chan types.ChunkChatCompletionResponse) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	defer func() {
 		close(streamChannel)
 	}()
@@ -50,7 +58,7 @@ func (c *App) chatMessagesStreamHandle(ctx context.Context, dataChan chan []byte
 			if err != nil {
 				log.Printf("Error unmarshalling chunk completion response: %v", err)
 				resp.Event = "error"
-				resp.Status = "500"
+				resp.Status = 500
 				resp.Code = "json unmarshal error"
 				resp.Message = err.Error()
 			}

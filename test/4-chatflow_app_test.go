@@ -64,7 +64,7 @@ func TestChatflowApp(t *testing.T) {
 					return
 				}
 				if msg.Event == "error" {
-					t.Logf("status=%s code=%s message=%s", msg.Status, msg.Code, msg.Message)
+					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
 				}
 				t.Log(msg.Answer)
 			}

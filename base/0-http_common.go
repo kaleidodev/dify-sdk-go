@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"strings"
+
+	"github.com/safejob/dify-sdk-go/types"
 )
 
 func (c *HttpClient) GetApiServer() string {
@@ -23,6 +25,10 @@ func (c *HttpClient) GetApiKey() string {
 }
 
 func (c *HttpClient) CreateBaseRequest(ctx context.Context, method, apiUrl string, body interface{}) (*http.Request, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	if c.debug {
 		log.Print("--== 请求URL:==--\n", fmt.Sprintf("%s %s", method, c.GetApiServer()+apiUrl))
 	}
@@ -51,6 +57,10 @@ func (c *HttpClient) CreateBaseRequest(ctx context.Context, method, apiUrl strin
 }
 
 func (c *HttpClient) CreateFormRequest(ctx context.Context, method, apiUrl string, data map[string]string) (*http.Request, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	if c.debug {
 		log.Print("--== 请求URL:==--\n", fmt.Sprintf("%s %s", method, c.GetApiServer()+apiUrl))
 	}
@@ -126,6 +136,10 @@ func (c *HttpClient) SendJSONRequest(req *http.Request, res interface{}) error {
 }
 
 func (c *HttpClient) SendRawRequest(ctx context.Context, method, apiUrl string, req interface{}) (*http.Response, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	httpReq, err := c.CreateBaseRequest(ctx, method, apiUrl, req)
 	if err != nil {
 		return nil, err
@@ -138,7 +152,11 @@ func (c *HttpClient) SendRequest(req *http.Request) (*http.Response, error) {
 }
 
 func (c *HttpClient) SSEEventHandle(ctx context.Context, resp *http.Response) (ch chan []byte) {
-	ch = make(chan []byte)
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	
+	ch = make(chan []byte, 10)
 
 	go func() {
 		ctx, cancel := context.WithTimeout(ctx, c.timeout)
@@ -168,7 +186,7 @@ func (c *HttpClient) SSEEventHandle(ctx context.Context, resp *http.Response) (c
 						}
 						return
 					}
-					ch <- []byte(fmt.Sprintf(errEventStr, "500", "read data err", err.Error()))
+					ch <- []byte(fmt.Sprintf(types.ErrEventStr, 500, "read data err", err.Error()))
 					return
 				}
 
@@ -217,13 +235,11 @@ func handleErrorResponse(errStr string, ch chan []byte) {
 	var errbody errBody
 	err := json.Unmarshal([]byte(errStr), &errbody)
 	if err == nil {
-		ch <- []byte(fmt.Sprintf(errEventStr, errbody.Status, errbody.Code, errbody.Message))
+		ch <- []byte(fmt.Sprintf(types.ErrEventStr, errbody.Status, errbody.Code, errbody.Message))
 	} else {
-		ch <- []byte(fmt.Sprintf(errEventStr, "500", "handleErrorResponse:json unmarshal err", err.Error()+"data:"+errStr))
+		ch <- []byte(fmt.Sprintf(types.ErrEventStr, 500, "handleErrorResponse:json unmarshal err", err.Error()+"data:"+errStr))
 	}
 }
-
-const errEventStr = `{"event":"error","status":"%v","code":"%s","message":"%s"}`
 
 type errBody struct {
 	Code    string `json:"code"`

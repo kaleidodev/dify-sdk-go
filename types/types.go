@@ -254,26 +254,26 @@ type Metadata struct {
 
 type ChunkChatCompletionResponse struct {
 	// 事件类型 message/agent_message/agent_thought/message_file/message_end/tts_message/tts_message_end/message_replace/error/ping
-	Event                string      `json:"event"`                     // 事件类型
-	TaskId               string      `json:"task_id,omitempty"`         // 任务 ID
-	MessageId            string      `json:"message_id,omitempty"`      // 消息唯一 ID
-	ConversationId       string      `json:"conversation_id,omitempty"` // 会话 ID
-	Answer               string      `json:"answer,omitempty"`          // LLM 返回文本块内容
-	CreatedAt            int         `json:"created_at,omitempty"`      // 创建时间戳
-	Id                   string      `json:"id,omitempty"`
-	Position             int64       `json:"position,omitempty"`      //agent_thought在消息中的位置
-	Thought              string      `json:"thought,omitempty"`       // agent的思考内容
-	Observation          string      `json:"observation,omitempty"`   // 工具调用的返回结果
-	Tool                 string      `json:"tool,omitempty"`          // 使用的工具列表
-	ToolInput            string      `json:"tool_input,omitempty"`    // 工具的输入，JSON格式的字符串
-	MessageFiles         []string    `json:"message_files,omitempty"` // 当前 agent_thought 关联的文件ID
-	Type                 string      `json:"type,omitempty"`          // 文件类型，目前仅为image
-	BelongsTo            string      `json:"belongs_to,omitempty"`    // 文件归属
-	Url                  string      `json:"url,omitempty"`           // 文件访问地址
-	Metadata             Metadata    `json:"metadata,omitempty"`      // 元数据
-	Audio                string      `json:"audio,omitempty"`         // 语音合成之后的音频块使用 Base64 编码之后的文本内容
-	FromVariableSelector interface{} `json:"from_variable_selector,omitempty"`
-	WorkflowRunId        string      `json:"workflow_run_id,omitempty"` // workflow 执行 ID
+	Event                string   `json:"event"`                     // 事件类型
+	TaskId               string   `json:"task_id,omitempty"`         // 任务 ID
+	MessageId            string   `json:"message_id,omitempty"`      // 消息唯一 ID
+	ConversationId       string   `json:"conversation_id,omitempty"` // 会话 ID
+	Answer               string   `json:"answer,omitempty"`          // LLM 返回文本块内容
+	CreatedAt            int      `json:"created_at,omitempty"`      // 创建时间戳
+	Id                   string   `json:"id,omitempty"`
+	Position             int64    `json:"position,omitempty"`      //agent_thought在消息中的位置
+	Thought              string   `json:"thought,omitempty"`       // agent的思考内容
+	Observation          string   `json:"observation,omitempty"`   // 工具调用的返回结果
+	Tool                 string   `json:"tool,omitempty"`          // 使用的工具列表
+	ToolInput            string   `json:"tool_input,omitempty"`    // 工具的输入，JSON格式的字符串
+	MessageFiles         []string `json:"message_files,omitempty"` // 当前 agent_thought 关联的文件ID
+	Type                 string   `json:"type,omitempty"`          // 文件类型，目前仅为image
+	BelongsTo            string   `json:"belongs_to,omitempty"`    // 文件归属
+	Url                  string   `json:"url,omitempty"`           // 文件访问地址
+	Metadata             Metadata `json:"metadata,omitempty"`      // 元数据
+	Audio                string   `json:"audio,omitempty"`         // 语音合成之后的音频块使用 Base64 编码之后的文本内容
+	FromVariableSelector []string `json:"from_variable_selector,omitempty"`
+	WorkflowRunId        string   `json:"workflow_run_id,omitempty"` // workflow 执行 ID
 	Data                 struct {
 		Id                string                 `json:"id,omitempty"`                  // workflow 执行 ID
 		WorkflowId        string                 `json:"workflow_id,omitempty"`         // 关联 Workflow ID
@@ -332,7 +332,7 @@ type ChunkChatCompletionResponse struct {
 		IterationId               interface{}   `json:"iteration_id,omitempty"`
 		LoopId                    interface{}   `json:"loop_id,omitempty"`
 	} `json:"data,omitempty"`
-	Status  string `json:"status,omitempty"`  // HTTP 状态码
+	Status  int    `json:"status,omitempty"`  // HTTP 状态码
 	Code    string `json:"code,omitempty"`    // 错误码
 	Message string `json:"message,omitempty"` // 错误消息
 }

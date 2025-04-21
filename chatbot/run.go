@@ -2,15 +2,18 @@ package chatbot
 
 import (
 	"context"
-	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 
 	"github.com/safejob/dify-sdk-go/types"
 )
 
 // Run 发送对话消息(流式)
-func (c *App) Run(ctx context.Context, req types.ChatRequest) (chan types.ChunkChatCompletionResponse, error) {
+func (c *App) Run(ctx context.Context, req types.ChatRequest) (event *types.EventCh) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	
 	req.ResponseMode = "streaming"
 
 	if req.User == "" {
@@ -19,42 +22,12 @@ func (c *App) Run(ctx context.Context, req types.ChatRequest) (chan types.ChunkC
 
 	httpResp, err := c.client.SendRawRequest(ctx, http.MethodPost, "/chat-messages", req)
 	if err != nil {
-		return nil, err
+		ch := make(chan []byte, 10)
+		ch <- []byte(fmt.Sprintf(types.ErrEventStr, 500, "request err", err.Error()))
+		close(ch)
+
+		return types.NewEventCh(ch, ctx)
 	}
 
-	dataChan := c.client.SSEEventHandle(ctx, httpResp)
-
-	streamChannel := make(chan types.ChunkChatCompletionResponse)
-	go c.chatMessagesStreamHandle(ctx, dataChan, streamChannel)
-
-	return streamChannel, nil
-}
-
-func (c *App) chatMessagesStreamHandle(ctx context.Context, dataChan chan []byte, streamChannel chan types.ChunkChatCompletionResponse) {
-	defer func() {
-		close(streamChannel)
-	}()
-
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		default:
-			data, ok := <-dataChan
-			if !ok {
-				return
-			}
-
-			var resp types.ChunkChatCompletionResponse
-			err := json.Unmarshal(data, &resp)
-			if err != nil {
-				log.Printf("Error unmarshalling chunk completion response: %v", err)
-				resp.Event = "error"
-				resp.Status = "500"
-				resp.Code = "json unmarshal error"
-				resp.Message = err.Error()
-			}
-			streamChannel <- resp
-		}
-	}
+	return types.NewEventCh(c.client.SSEEventHandle(ctx, httpResp), ctx)
 }

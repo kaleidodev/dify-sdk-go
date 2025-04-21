@@ -29,7 +29,7 @@ func TestAgentApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.ChatbotApp().RunBlock(ctx, types.ChatRequest{
+		resp, err := client.AgentApp().RunBlock(ctx, types.ChatRequest{
 			Query:            "你好!你知道我是谁么？",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -41,13 +41,70 @@ func TestAgentApp(t *testing.T) {
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
-	t.Run("Chatbot-Run", func(t *testing.T) {
+	t.Run("Agent_Run", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.ChatbotApp().Run(ctx, types.ChatRequest{
+		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
+			Query:            "你知道现在的时间么？",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).ParseToStructCh()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				if msg.Event == "error" {
+					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
+				}
+				if msg.Answer != "" {
+					t.Logf("|%s|", msg.Answer)
+				}
+			}
+		}
+	})
+
+	t.Run("Agent_Run", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
+			Query:            "你知道现在的时间么？",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).ParseToEventCh()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				t.Logf("Type=%s Data=%+v \n", msg.Type, msg.Data)
+			}
+		}
+	})
+
+	t.Run("Agent_Run", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
 			Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -55,18 +112,20 @@ func TestAgentApp(t *testing.T) {
 			ConversationId:   "",
 			Files:            nil,
 			AutoGenerateName: nil,
-		})
+		}).ParseToStructCh()
 		t.Logf("err=%v", err)
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}
 				if msg.Event == "error" {
-					t.Logf("status=%s code=%s message=%s", msg.Status, msg.Code, msg.Message)
+					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
 				}
-				t.Log(msg.Answer)
+				if msg.Answer != "" {
+					t.Log(msg.Answer)
+				}
 			}
 		}
 	})
@@ -77,7 +136,7 @@ func TestAgentApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.ChatbotApp().Run(ctx, types.ChatRequest{
+		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
 			Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -85,16 +144,18 @@ func TestAgentApp(t *testing.T) {
 			ConversationId:   "",
 			Files:            nil,
 			AutoGenerateName: nil,
-		})
+		}).ParseToStructCh()
 		t.Logf("err=%v", err)
 		cnt := 0
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}
-				t.Log(msg.Answer)
+				if msg.Answer != "" {
+					t.Log(msg.Answer)
+				}
 				cnt++
 				if cnt == 4 {
 					err := client.AgentApp().Stop(msg.TaskId, "")
@@ -128,12 +189,12 @@ func TestAgentApp(t *testing.T) {
 	})
 
 	t.Run("Agent_AppInfo", func(t *testing.T) {
-		resp, err := client.ChatbotApp().AppInfo()
+		resp, err := client.AgentApp().AppInfo()
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
 	t.Run("Agent_AppParameter", func(t *testing.T) {
-		resp, err := client.ChatbotApp().AppParameter()
+		resp, err := client.AgentApp().AppParameter()
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 

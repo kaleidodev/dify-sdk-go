@@ -47,7 +47,7 @@ func TestChatbotApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.ChatbotApp().Run(ctx, types.ChatRequest{
+		eventCh := client.ChatbotApp().Run(ctx, types.ChatRequest{
 			Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -55,18 +55,19 @@ func TestChatbotApp(t *testing.T) {
 			ConversationId:   "",
 			Files:            nil,
 			AutoGenerateName: nil,
-		})
-		t.Logf("err=%v", err)
+		}).ParseToStructCh()
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}
 				if msg.Event == "error" {
-					t.Logf("status=%s code=%s message=%s", msg.Status, msg.Code, msg.Message)
+					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
 				}
-				t.Log(msg.Answer)
+				if msg.Answer != "" {
+					t.Log(msg.Answer)
+				}
 			}
 		}
 	})
@@ -77,7 +78,7 @@ func TestChatbotApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.ChatbotApp().Run(ctx, types.ChatRequest{
+		eventCh := client.ChatbotApp().Run(ctx, types.ChatRequest{
 			Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -85,16 +86,17 @@ func TestChatbotApp(t *testing.T) {
 			ConversationId:   "",
 			Files:            nil,
 			AutoGenerateName: nil,
-		})
-		t.Logf("err=%v", err)
+		}).ParseToStructCh()
 		cnt := 0
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}
-				t.Log(msg.Answer)
+				if msg.Answer != "" {
+					t.Log(msg.Answer)
+				}
 				cnt++
 				if cnt == 4 {
 					err := client.ChatbotApp().Stop(msg.TaskId, "")
