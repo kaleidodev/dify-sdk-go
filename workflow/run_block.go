@@ -8,7 +8,7 @@ import (
 )
 
 // RunBlock 发送对话消息(阻塞式)
-func (c *App) RunBlock(ctx context.Context, req types.WorkflowRequest) (resp types.WorkflowResponse, err error) {
+func (c *App) RunBlock(ctx context.Context, req types.WorkflowRequest) (resp types.WorkflowAppBlockingResponse, err error) {
 	if ctx == nil {
 		ctx = context.Background()
 	}

@@ -8,11 +8,11 @@ import (
 )
 
 // RunBlock 发送对话消息(阻塞式)
-func (c *App) RunBlock(ctx context.Context, req types.CompletionRequest) (resp types.ChatCompletionResponse, err error) {
+func (c *App) RunBlock(ctx context.Context, req types.CompletionRequest) (resp types.ChatbotCompletionBlockingResponse, err error) {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	
+
 	req.ResponseMode = "blocking"
 
 	if req.User == "" {

@@ -25,4 +25,5 @@ go.work.sum
 .env
 
 test/0-init.go
+doc/*.log
 
