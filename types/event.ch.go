@@ -23,8 +23,9 @@ func NewEventCh(ch chan []byte, ctx context.Context) *EventCh {
 	}
 }
 
+// ParseToStructCh 将事件解析为一个大的统一结构体(字段有冗余)
 func (c *EventCh) ParseToStructCh() <-chan ChunkChatCompletionResponse {
-	streamChannel := make(chan ChunkChatCompletionResponse, 10)
+	streamChannel := make(chan ChunkChatCompletionResponse, 500)
 
 	go func() {
 		defer func() {
@@ -35,8 +36,7 @@ func (c *EventCh) ParseToStructCh() <-chan ChunkChatCompletionResponse {
 			select {
 			case <-c.ctx.Done():
 
-			default:
-				data, ok := <-c.ch
+			case data, ok := <-c.ch:
 				if !ok {
 					return
 				}
@@ -58,17 +58,93 @@ func (c *EventCh) ParseToStructCh() <-chan ChunkChatCompletionResponse {
 	return streamChannel
 }
 
-type Event struct {
-	Type string
-	Data interface{}
+// SimplePrint 仅输出最终文字结果
+func (c *EventCh) SimplePrint() <-chan string {
+	streamChannel := make(chan string, 500)
+
+	go func() {
+		defer func() {
+			close(streamChannel)
+		}()
+
+		for {
+			select {
+			case <-c.ctx.Done():
+				return
+
+			case data, ok := <-c.ch:
+				if !ok {
+					return
+				}
+
+				event, err := c.processEvent(data)
+				if err != nil {
+					log.Printf("Error processing event: %v", err)
+					continue
+				}
+
+				var str string
+				switch event.Type {
+				case EVENT_ERROR:
+					eventData := event.Data.(*EventError)
+					str = fmt.Sprintf("哦豁,请求出错了: Status=%d Code=%s Message=%s", eventData.Status, eventData.Code, eventData.Message)
+				case EVENT_MESSAGE:
+					eventData := event.Data.(*EventMessage)
+					str = eventData.Answer
+				case EVENT_MESSAGE_END:
+				case EVENT_TTS_MESSAGE:
+					eventData := event.Data.(*EventTtsMessage)
+					str = eventData.Audio
+				case EVENT_TTS_MESSAGE_END:
+				case EVENT_MESSAGE_FILE:
+				case EVENT_MESSAGE_REPLACE:
+					eventData := event.Data.(*EventMessageReplace)
+					str = fmt.Sprintf("\n%s\n", eventData.Answer)
+				case EVENT_AGENT_THOUGHT:
+					eventData := event.Data.(*EventAgentThought)
+					if eventData.Thought != "" && eventData.Observation != "" {
+						str = fmt.Sprintf("使用工具: \"%s\"\n请求：%s\n响应: %s\n", eventData.Tool, eventData.ToolInput, eventData.Observation)
+					}
+				case EVENT_AGENT_MESSAGE:
+					eventData := event.Data.(*EventAgentMessage)
+					str = eventData.Answer
+				case EVENT_WORKFLOW_STARTED:
+				case EVENT_WORKFLOW_FINISHED:
+				case EVENT_NODE_STARTED:
+				case EVENT_NODE_FINISHED:
+				case EVENT_NODE_RETRY:
+				case EVENT_PARALLEL_BRANCH_STARTED:
+				case EVENT_PARALLEL_BRANCH_FINISHED:
+				case EVENT_ITERATION_STARTED:
+				case EVENT_ITERATION_NEXT:
+				case EVENT_ITERATION_COMPLETED:
+				case EVENT_LOOP_STARTED:
+				case EVENT_LOOP_NEXT:
+				case EVENT_LOOP_COMPLETED:
+				case EVENT_TEXT_CHUNK:
+				case EVENT_TEXT_REPLACE:
+				case EVENT_AGENT_LOG:
+				default:
+					log.Printf("Unknown event: %v", event.Type)
+				}
+
+				if str == " " {
+					continue
+				}
+
+				if str != "" {
+					streamChannel <- str
+				}
+			}
+		}
+	}()
+
+	return streamChannel
 }
 
-type eventType struct {
-	Event string `json:"event"` // 事件类型
-}
-
+// ParseToEventCh 将事件按事件类型解析为不同的结构体(字段更准确、冗余少)
 func (c *EventCh) ParseToEventCh() <-chan Event {
-	eventChannel := make(chan Event, 10)
+	eventChannel := make(chan Event, 500)
 
 	go func() {
 		defer func() {
@@ -80,8 +156,7 @@ func (c *EventCh) ParseToEventCh() <-chan Event {
 			case <-c.ctx.Done():
 				return
 
-			default:
-				data, ok := <-c.ch
+			case data, ok := <-c.ch:
 				if !ok {
 					return
 				}
@@ -100,32 +175,43 @@ func (c *EventCh) ParseToEventCh() <-chan Event {
 	return eventChannel
 }
 
-var eventTypeMap = map[string]interface{}{
-	EVENT_ERROR:                    &EventError{},
-	EVENT_MESSAGE:                  &EventMessage{},
-	EVENT_MESSAGE_END:              &EventMessageEnd{},
-	EVENT_TTS_MESSAGE:              &EventTtsMessage{},
-	EVENT_TTS_MESSAGE_END:          &EventTtsMessageEnd{},
-	EVENT_MESSAGE_FILE:             &EventMessageFile{},
-	EVENT_MESSAGE_REPLACE:          &EventMessageReplace{},
-	EVENT_AGENT_THOUGHT:            &EventAgentThought{},
-	EVENT_AGENT_MESSAGE:            &EventAgentMessage{},
-	EVENT_WORKFLOW_STARTED:         &EventWorkflowStarted{},
-	EVENT_WORKFLOW_FINISHED:        &EventWorkflowFinished{},
-	EVENT_NODE_STARTED:             &EventNodeStarted{},
-	EVENT_NODE_FINISHED:            &EventNodeFinished{},
-	EVENT_NODE_RETRY:               &EventNodeRetry{},
-	EVENT_PARALLEL_BRANCH_STARTED:  &EventParallelBranchStarted{},
-	EVENT_PARALLEL_BRANCH_FINISHED: &EventParallelBranchFinished{},
-	EVENT_ITERATION_STARTED:        &EventIterationStarted{},
-	EVENT_ITERATION_NEXT:           &EventIterationNext{},
-	EVENT_ITERATION_COMPLETED:      &EventIterationCompleted{},
-	EVENT_LOOP_STARTED:             &EventLoopStarted{},
-	EVENT_LOOP_NEXT:                &EventLoopNext{},
-	EVENT_LOOP_COMPLETED:           &EventLoopCompleted{},
-	EVENT_TEXT_CHUNK:               &EventTextChunk{},
-	EVENT_TEXT_REPLACE:             &EventTextReplace{},
-	EVENT_AGENT_LOG:                &EventAgentLog{},
+type Event struct {
+	Type string
+	Data interface{}
+}
+
+type eventType struct {
+	Event string `json:"event"` // 事件类型
+}
+
+type eventCreator func() interface{}
+
+var eventTypeMap = map[string]eventCreator{
+	EVENT_ERROR:                    func() interface{} { return &EventError{} },
+	EVENT_MESSAGE:                  func() interface{} { return &EventMessage{} },
+	EVENT_MESSAGE_END:              func() interface{} { return &EventMessageEnd{} },
+	EVENT_TTS_MESSAGE:              func() interface{} { return &EventTtsMessage{} },
+	EVENT_TTS_MESSAGE_END:          func() interface{} { return &EventTtsMessageEnd{} },
+	EVENT_MESSAGE_FILE:             func() interface{} { return &EventMessageFile{} },
+	EVENT_MESSAGE_REPLACE:          func() interface{} { return &EventMessageReplace{} },
+	EVENT_AGENT_THOUGHT:            func() interface{} { return &EventAgentThought{} },
+	EVENT_AGENT_MESSAGE:            func() interface{} { return &EventAgentMessage{} },
+	EVENT_WORKFLOW_STARTED:         func() interface{} { return &EventWorkflowStarted{} },
+	EVENT_WORKFLOW_FINISHED:        func() interface{} { return &EventWorkflowFinished{} },
+	EVENT_NODE_STARTED:             func() interface{} { return &EventNodeStarted{} },
+	EVENT_NODE_FINISHED:            func() interface{} { return &EventNodeFinished{} },
+	EVENT_NODE_RETRY:               func() interface{} { return &EventNodeRetry{} },
+	EVENT_PARALLEL_BRANCH_STARTED:  func() interface{} { return &EventParallelBranchStarted{} },
+	EVENT_PARALLEL_BRANCH_FINISHED: func() interface{} { return &EventParallelBranchFinished{} },
+	EVENT_ITERATION_STARTED:        func() interface{} { return &EventIterationStarted{} },
+	EVENT_ITERATION_NEXT:           func() interface{} { return &EventIterationNext{} },
+	EVENT_ITERATION_COMPLETED:      func() interface{} { return &EventIterationCompleted{} },
+	EVENT_LOOP_STARTED:             func() interface{} { return &EventLoopStarted{} },
+	EVENT_LOOP_NEXT:                func() interface{} { return &EventLoopNext{} },
+	EVENT_LOOP_COMPLETED:           func() interface{} { return &EventLoopCompleted{} },
+	EVENT_TEXT_CHUNK:               func() interface{} { return &EventTextChunk{} },
+	EVENT_TEXT_REPLACE:             func() interface{} { return &EventTextReplace{} },
+	EVENT_AGENT_LOG:                func() interface{} { return &EventAgentLog{} },
 }
 
 func (c *EventCh) processEvent(data []byte) (Event, error) {
@@ -134,18 +220,19 @@ func (c *EventCh) processEvent(data []byte) (Event, error) {
 		return Event{}, fmt.Errorf("failed to unmarshal event type: %w", err)
 	}
 
-	var result Event
-	result.Type = event.Event
-
-	targetType, exists := eventTypeMap[event.Event]
+	creator, exists := eventTypeMap[event.Event]
 	if !exists {
 		return Event{}, fmt.Errorf("unknown event type: %s", event.Event)
 	}
 
-	if err := json.Unmarshal(data, &targetType); err != nil {
+	targetType := creator()
+
+	if err := json.Unmarshal(data, targetType); err != nil {
 		return Event{}, fmt.Errorf("failed to unmarshal event data: %w", err)
 	}
 
-	result.Data = targetType
-	return result, nil
+	return Event{
+		Type: event.Event,
+		Data: targetType,
+	}, nil
 }

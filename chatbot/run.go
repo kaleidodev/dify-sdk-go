@@ -13,7 +13,7 @@ func (c *App) Run(ctx context.Context, req types.ChatRequest) (event *types.Even
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	
+
 	req.ResponseMode = "streaming"
 
 	if req.User == "" {
@@ -22,7 +22,7 @@ func (c *App) Run(ctx context.Context, req types.ChatRequest) (event *types.Even
 
 	httpResp, err := c.client.SendRawRequest(ctx, http.MethodPost, "/chat-messages", req)
 	if err != nil {
-		ch := make(chan []byte, 10)
+		ch := make(chan []byte, 500)
 		ch <- []byte(fmt.Sprintf(types.ErrEventStr, 500, "request err", err.Error()))
 		close(ch)
 

@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -15,7 +16,7 @@ func TestAgentApp(t *testing.T) {
 		ApiServer: os.Getenv("APIServer"),
 		ApiKey:    os.Getenv("AgentApiKey"),
 		User:      "agent-demo",
-		Debug:     true,
+		Debug:     false,
 		Timeout:   time.Second * 180,
 		Transport: nil,
 	})
@@ -41,7 +42,7 @@ func TestAgentApp(t *testing.T) {
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
-	t.Run("Agent_Run", func(t *testing.T) {
+	t.Run("Agent_Run_ParseToStructCh", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
@@ -72,14 +73,40 @@ func TestAgentApp(t *testing.T) {
 		}
 	})
 
-	t.Run("Agent_Run", func(t *testing.T) {
+	t.Run("Agent_Run_SimplePrint", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
 		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
-			Query:            "你知道现在的时间么？",
+			Query:            "你知道现在的时间以及星期么？",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).SimplePrint()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				fmt.Printf("%s", msg)
+			}
+		}
+	})
+
+	t.Run("Agent_Run_ParseToEventCh", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
+			Query:            "你知道现在的时间以及星期么？",
 			Inputs:           input,
 			ResponseMode:     "",
 			User:             "",
@@ -93,12 +120,12 @@ func TestAgentApp(t *testing.T) {
 				if !ok {
 					return
 				}
-				t.Logf("Type=%s Data=%+v \n", msg.Type, msg.Data)
+				t.Logf("====>event: %s %+v\n", msg.Type, msg.Data)
 			}
 		}
 	})
 
-	t.Run("Agent_Run", func(t *testing.T) {
+	t.Run("Agent_Run_ParseToStructCh", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})

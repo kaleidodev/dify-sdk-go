@@ -28,7 +28,7 @@ func (c *App) Run(ctx context.Context, req types.WorkflowRequest) (chan types.Ch
 
 	dataChan := c.client.SSEEventHandle(ctx, httpResp)
 
-	streamChannel := make(chan types.ChunkChatCompletionResponse)
+	streamChannel := make(chan types.ChunkChatCompletionResponse, 500)
 	go c.chatMessagesStreamHandle(ctx, dataChan, streamChannel)
 
 	return streamChannel, nil

@@ -155,8 +155,8 @@ func (c *HttpClient) SSEEventHandle(ctx context.Context, resp *http.Response) (c
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	
-	ch = make(chan []byte, 10)
+
+	ch = make(chan []byte, 1024)
 
 	go func() {
 		ctx, cancel := context.WithTimeout(ctx, c.timeout)
@@ -175,57 +175,58 @@ func (c *HttpClient) SSEEventHandle(ctx context.Context, resp *http.Response) (c
 			case <-ctx.Done():
 				return
 			default:
-				line, err := reader.ReadString('\n')
-				if err != nil {
-					if err == io.EOF {
-						if c.debug {
-							log.Println("接收SSE数据完成 io.EOF")
-						}
-						if errBuffer.Len() > 0 {
-							handleErrorResponse(errBuffer.String(), ch)
-						}
-						return
+			}
+
+			line, err := reader.ReadString('\n')
+			if err != nil {
+				if err == io.EOF {
+					if c.debug {
+						log.Println("接收SSE数据完成 io.EOF")
 					}
-					ch <- []byte(fmt.Sprintf(types.ErrEventStr, 500, "read data err", err.Error()))
+					if errBuffer.Len() > 0 {
+						handleErrorResponse(errBuffer.String(), ch)
+					}
 					return
 				}
+				ch <- []byte(fmt.Sprintf(types.ErrEventStr, 500, "read data err", err.Error()))
+				return
+			}
 
-				line = strings.TrimSpace(line)
-				if line == "" {
-					continue
-				}
+			line = strings.TrimSpace(line)
+			if line == "" {
+				continue
+			}
 
-				if strings.HasPrefix(line, "data: ") {
-					data := strings.TrimPrefix(line, "data: ")
-					if c.debug {
-						var tmp interface{}
-						if err := json.Unmarshal([]byte(data), &tmp); err == nil {
-							prettyJSON, err := json.Marshal(tmp)
-							if err == nil {
-								log.Println("接收到SSE数据：", string(prettyJSON))
-							} else {
-								log.Println("接收到SSE数据：", data)
-							}
+			if strings.HasPrefix(line, "data: ") {
+				data := strings.TrimPrefix(line, "data: ")
+				if c.debug {
+					var tmp interface{}
+					if err := json.Unmarshal([]byte(data), &tmp); err == nil {
+						prettyJSON, err := json.Marshal(tmp)
+						if err == nil {
+							log.Println("接收到SSE数据：", string(prettyJSON))
 						} else {
 							log.Println("接收到SSE数据：", data)
 						}
+					} else {
+						log.Println("接收到SSE数据：", data)
 					}
+				}
 
-					if len(data) == 0 {
-						continue
-					}
-
-					ch <- []byte(data)
+				if len(data) == 0 {
 					continue
 				}
 
-				// ping的返回不是json字符串
-				if line == "event: ping" {
-					continue
-				}
-
-				errBuffer.WriteString(line)
+				ch <- []byte(data)
+				continue
 			}
+
+			// ping的返回不是json字符串
+			if line == "event: ping" {
+				continue
+			}
+
+			errBuffer.WriteString(line)
 		}
 	}()
 
