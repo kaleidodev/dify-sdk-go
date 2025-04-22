@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -41,7 +42,38 @@ func TestChatbotApp(t *testing.T) {
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
-	t.Run("Chatbot-Run", func(t *testing.T) {
+	t.Run("Chatbot_Run_ParseToStructCh-1", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.ChatbotApp().Run(ctx, types.ChatRequest{
+			Query:            "你知道现在的时间么？",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).ParseToStructCh()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				if msg.Event == "error" {
+					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
+				}
+				if msg.Answer != "" {
+					t.Log(msg.Answer)
+				}
+			}
+		}
+	})
+
+	t.Run("Chatbot_Run_ParseToStructCh-2", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
@@ -68,6 +100,58 @@ func TestChatbotApp(t *testing.T) {
 				if msg.Answer != "" {
 					t.Log(msg.Answer)
 				}
+			}
+		}
+	})
+
+	t.Run("Chatbot_Run_SimplePrint", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.DebugOff().ChatbotApp().Run(ctx, types.ChatRequest{
+			Query:            "你知道现在的时间以及星期么？",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).SimplePrint()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				fmt.Printf("%s", msg)
+			}
+		}
+	})
+
+	t.Run("Chatbot_Run_ParseToEventCh", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.ChatbotApp().Run(ctx, types.ChatRequest{
+			Query:            "你知道现在的时间以及星期么？",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).ParseToEventCh()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				t.Logf("====>event: %s %+v\n", msg.Type, msg.Data)
 			}
 		}
 	})

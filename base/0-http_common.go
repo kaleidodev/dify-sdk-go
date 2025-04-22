@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"strings"
+	"time"
 
 	"github.com/safejob/dify-sdk-go/types"
 )
@@ -148,7 +149,14 @@ func (c *HttpClient) SendRawRequest(ctx context.Context, method, apiUrl string, 
 }
 
 func (c *HttpClient) SendRequest(req *http.Request) (*http.Response, error) {
-	return c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(req)
+	if resp != nil && resp.StatusCode == http.StatusUnauthorized { // 解决服务端长时间空闲后首次请求失败的问题
+		time.Sleep(time.Second * 1)
+		log.Println("[Warn] 服务端响应状态码500 执行重试逻辑 ...")
+		return c.httpClient.Do(req)
+	}
+
+	return resp, err
 }
 
 func (c *HttpClient) SSEEventHandle(ctx context.Context, resp *http.Response) (ch chan []byte) {

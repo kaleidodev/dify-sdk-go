@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -39,23 +40,22 @@ func TestCompletionApp(t *testing.T) {
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
-	t.Run("Chatbot-Run", func(t *testing.T) {
+	t.Run("Completion_Run_ParseToStructCh", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.CompletionApp().Run(ctx, types.CompletionRequest{
+		eventCh := client.CompletionApp().Run(ctx, types.CompletionRequest{
 			Query:        "帮我构思一个国庆五天的出游计划，尽可能详细一点",
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
 			Files:        nil,
-		})
-		t.Logf("err=%v", err)
+		}).ParseToStructCh()
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}
@@ -67,24 +67,71 @@ func TestCompletionApp(t *testing.T) {
 		}
 	})
 
+	t.Run("Completion_Run_SimplePrint", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.DebugOff().CompletionApp().Run(ctx, types.CompletionRequest{
+			Query:        "你知道现在的时间以及星期么？",
+			Inputs:       input,
+			ResponseMode: "",
+			User:         "",
+			Files:        nil,
+		}).SimplePrint()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				fmt.Printf("%s", msg)
+			}
+		}
+	})
+
+	t.Run("Completion_Run_ParseToEventCh", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.CompletionApp().Run(ctx, types.CompletionRequest{
+			Query:        "你知道现在的时间以及星期么？",
+			Inputs:       input,
+			ResponseMode: "",
+			User:         "",
+			Files:        nil,
+		}).ParseToEventCh()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				t.Logf("====>event: %s %+v\n", msg.Type, msg.Data)
+			}
+		}
+	})
+
 	t.Run("Completion_Run_Stop", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		resp, err := client.CompletionApp().Run(ctx, types.CompletionRequest{
+		eventCh := client.CompletionApp().Run(ctx, types.CompletionRequest{
 			Query:        "帮我构思一个国庆五天的出游计划，尽可能详细一点",
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
 			Files:        nil,
-		})
-		t.Logf("err=%v", err)
+		}).ParseToStructCh()
 		cnt := 0
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}

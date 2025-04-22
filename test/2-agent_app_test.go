@@ -16,7 +16,7 @@ func TestAgentApp(t *testing.T) {
 		ApiServer: os.Getenv("APIServer"),
 		ApiKey:    os.Getenv("AgentApiKey"),
 		User:      "agent-demo",
-		Debug:     false,
+		Debug:     true,
 		Timeout:   time.Second * 180,
 		Transport: nil,
 	})
@@ -42,7 +42,7 @@ func TestAgentApp(t *testing.T) {
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
-	t.Run("Agent_Run_ParseToStructCh", func(t *testing.T) {
+	t.Run("Agent_Run_ParseToStructCh-1", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
@@ -73,13 +73,45 @@ func TestAgentApp(t *testing.T) {
 		}
 	})
 
-	t.Run("Agent_Run_SimplePrint", func(t *testing.T) {
+	t.Run("Agent_Run_ParseToStructCh-2", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
 		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
+			Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
+			Inputs:           input,
+			ResponseMode:     "",
+			User:             "",
+			ConversationId:   "",
+			Files:            nil,
+			AutoGenerateName: nil,
+		}).ParseToStructCh()
+		t.Logf("err=%v", err)
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				if msg.Event == "error" {
+					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
+				}
+				if msg.Answer != "" {
+					t.Log(msg.Answer)
+				}
+			}
+		}
+	})
+
+	t.Run("Agent_Run_SimplePrint", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["name"] = "张三"
+
+		eventCh := client.DebugOff().AgentApp().Run(ctx, types.ChatRequest{
 			Query:            "你知道现在的时间以及星期么？",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -125,38 +157,6 @@ func TestAgentApp(t *testing.T) {
 		}
 	})
 
-	t.Run("Agent_Run_ParseToStructCh", func(t *testing.T) {
-		ctx := context.Background()
-
-		input := make(map[string]interface{})
-		input["name"] = "张三"
-
-		eventCh := client.AgentApp().Run(ctx, types.ChatRequest{
-			Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
-			Inputs:           input,
-			ResponseMode:     "",
-			User:             "",
-			ConversationId:   "",
-			Files:            nil,
-			AutoGenerateName: nil,
-		}).ParseToStructCh()
-		t.Logf("err=%v", err)
-		for {
-			select {
-			case msg, ok := <-eventCh:
-				if !ok {
-					return
-				}
-				if msg.Event == "error" {
-					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
-				}
-				if msg.Answer != "" {
-					t.Log(msg.Answer)
-				}
-			}
-		}
-	})
-
 	t.Run("Agent_Run_Stop", func(t *testing.T) {
 		ctx := context.Background()
 
@@ -172,7 +172,6 @@ func TestAgentApp(t *testing.T) {
 			Files:            nil,
 			AutoGenerateName: nil,
 		}).ParseToStructCh()
-		t.Logf("err=%v", err)
 		cnt := 0
 		for {
 			select {

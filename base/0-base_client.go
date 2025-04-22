@@ -54,6 +54,16 @@ func (c *Client) HttpClient() *HttpClient {
 	return (*HttpClient)(c)
 }
 
+func (c *Client) DebugOn() *Client {
+	c.debug = true
+	return c
+}
+
+func (c *Client) DebugOff() *Client {
+	c.debug = false
+	return c
+}
+
 func (c *Client) ChatbotApp() *chatbot.App {
 	return chatbot.NewChatbot((*HttpClient)(c), (*AppClient)(c))
 }

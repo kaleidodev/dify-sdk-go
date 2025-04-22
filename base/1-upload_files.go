@@ -126,8 +126,7 @@ func (c *AppClient) UploadFile(filePath string, f *os.File, user string) (info t
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
 
 	// 发送请求
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := (*Client)(c).HttpClient().SendRequest(req)
 	if err != nil {
 		err = fmt.Errorf("failed to send request: %w", err)
 		return

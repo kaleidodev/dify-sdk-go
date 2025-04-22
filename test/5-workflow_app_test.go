@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -38,22 +39,21 @@ func TestWorkflowApp(t *testing.T) {
 		t.Logf("resp=%+v err=%v", resp, err)
 	})
 
-	t.Run("Chatbot-Run", func(t *testing.T) {
+	t.Run("Workflow_Run_ParseToStructCh", func(t *testing.T) {
 		ctx := context.Background()
 
 		input := make(map[string]interface{})
 		input["arg2"] = "test2"
 		input["arg1"] = "test1"
 
-		resp, err := client.WorkflowApp().Run(ctx, types.WorkflowRequest{
+		eventCh := client.WorkflowApp().Run(ctx, types.WorkflowRequest{
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
-		})
-		t.Logf("err=%v", err)
+		}).ParseToStructCh()
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}
@@ -65,6 +65,52 @@ func TestWorkflowApp(t *testing.T) {
 		}
 	})
 
+	t.Run("Workflow_Run_SimplePrint", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["arg2"] = "test2"
+		input["arg1"] = "test1"
+
+		eventCh := client.DebugOff().WorkflowApp().Run(ctx, types.WorkflowRequest{
+			Inputs:       input,
+			ResponseMode: "",
+			User:         "",
+		}).SimplePrint()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				fmt.Printf("%s", msg)
+			}
+		}
+	})
+
+	t.Run("Workflow_Run_ParseToEventCh", func(t *testing.T) {
+		ctx := context.Background()
+
+		input := make(map[string]interface{})
+		input["arg2"] = "test2"
+		input["arg1"] = "test1"
+
+		eventCh := client.WorkflowApp().Run(ctx, types.WorkflowRequest{
+			Inputs:       input,
+			ResponseMode: "",
+			User:         "",
+		}).ParseToEventCh()
+		for {
+			select {
+			case msg, ok := <-eventCh:
+				if !ok {
+					return
+				}
+				t.Logf("====>event: %s %+v\n", msg.Type, msg.Data)
+			}
+		}
+	})
+
 	t.Run("Workflow_Run_Stop", func(t *testing.T) {
 		ctx := context.Background()
 
@@ -72,16 +118,15 @@ func TestWorkflowApp(t *testing.T) {
 		input["arg2"] = "test2"
 		input["arg1"] = "test1"
 
-		resp, err := client.WorkflowApp().Run(ctx, types.WorkflowRequest{
+		eventCh := client.WorkflowApp().Run(ctx, types.WorkflowRequest{
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
-		})
-		t.Logf("err=%v", err)
+		}).ParseToStructCh()
 		cnt := 0
 		for {
 			select {
-			case msg, ok := <-resp:
+			case msg, ok := <-eventCh:
 				if !ok {
 					return
 				}

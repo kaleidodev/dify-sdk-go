@@ -69,8 +69,8 @@ ClientConfig有两个必填参数ApiServer和ApiKey，由于很多接口都需�
 其他参数可以根据需要进行设置，所以我们可以这样构建一个客户端：
 
 ```golang
-    client,err:=dify.NewClient(dify.ClientConfig{
-		ApiServer: "http://your.domain/v1",
+        client,err:=dify.NewClient(dify.ClientConfig{
+		ApiServer: "http://your.domain/v1", // 注意这里是包括/v1的
 		ApiKey:    "your-api-key",
 		User: "demo-client",
 	})
@@ -86,6 +86,17 @@ ClientConfig有两个必填参数ApiServer和ApiKey，由于很多接口都需�
 - 如果是 文本生成 Completion 类型，则是 client.CompletionApp()
 - 如果是 Chatflow 类型，则是 client.ChatflowApp()
 - 如果是 工作流 Workflow 类型，则是 client.WorkflowApp()
+
+需要注意的是，对于流式调用，这里提供了三种结果的输出方式:  
+- 方式一：将SSE Event事件解析为一个大而全的结构体，再通过channel输出  
+    优点是输出是固定的结构体，但这个结构体字段很多，很多字段会是空值，使用时不方便判断哪些字段是有用的，哪些是没用的  
+    调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).ParseToStructCh()`  
+- 方式二：将SSE Event事件中的输出以文本字符串方式，通过channel提供出来  
+    优点是只输出最终文本内容，其他内容不输出，使用最简单  
+    调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).SimplePrint()`  
+- 方式三：将SSE Event按事件类型，解析为具体的结构体，然后通过channel提供  
+    优点是不同的event事件类型，对应不同的结构体，更加精准，但是使用前需要做类型断言 如：`msg.Data.(*types.EventMessage)`  
+    调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).ParseToEventCh()`  
 
 ### 一个完整的示例
 
@@ -103,26 +114,26 @@ import (
 )
 
 func main() {
-	// 构建客户端 
-	client,err:=dify.NewClient(dify.ClientConfig{
+	// 构建客户端
+	client, err := dify.NewClient(dify.ClientConfig{
 		ApiServer: "http://your.domain/v1",
 		ApiKey:    "your-api-key",
-		User: "demo-client",
+		User:      "demo-client",
 	})
 	if err != nil {
 		log.Fatalf("Error creating client: %v", err)
 	}
 
 	// 获取应用基本信息
-	appInfo, err := client.AgentApp().AppInfo()
+	appInfo, err := client.ChatbotApp().AppInfo()
 	if err != nil {
 		log.Fatalf("Error getting app info: %v", err)
 	}
-	log.Printf("应用名称：%s 应用描述：%s \n", appInfo.Name,appInfo.Description)
+	log.Printf("应用名称：%s 应用描述：%s \n", appInfo.Name, appInfo.Description)
 
 	// 阻塞式调用示例
 	ctx := context.Background()
-	resp, err := client.AgentApp().RunBlock(ctx, types.ChatRequest{
+	resp, err := client.ChatbotApp().RunBlock(ctx, types.ChatRequest{
 		Query: "请帮我生成五一假期的出行计划",
 	})
 	if err != nil {
@@ -136,6 +147,112 @@ func main() {
 流式调用示例：
 
 ```golang
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/safejob/dify-sdk-go"
+	"github.com/safejob/dify-sdk-go/base"
+	"github.com/safejob/dify-sdk-go/types"
+)
+
+func main() {
+	// 构建客户端
+	client, err := dify.NewClient(dify.ClientConfig{
+		ApiServer: "http://your.domain/v1",
+		ApiKey:    "your-api-key",
+		User:   "demo-client",
+	})
+	if err != nil {
+		log.Fatalf("Error creating client: %v", err)
+	}
+
+	ctx := context.Background()
+	input := make(map[string]interface{})
+	input["name"] = "张三" // 这里根据实际dify配置，填写需要使用的变量
+	request := types.ChatRequest{
+		Query:            "帮我构思一个国庆五天的出游计划，尽可能详细一点",
+		Inputs:           input,
+		ResponseMode:     "",
+		User:             "",
+		ConversationId:   "",
+		Files:            nil,
+		AutoGenerateName: nil,
+	}
+
+	choise := 1
+	switch choise {
+	case 1:
+		// ParseToStructCh调用示例
+		ParseToStructChDemo(ctx, client, request)
+	case 2:
+		// SimplePrint调用示例
+		SimplePrintDemo(ctx, client, request)
+	case 3:
+		// ParseToEventCh调用示例
+		ParseToEventChDemo(ctx, client, request)
+	}
+}
+
+// ParseToStructCh调用示例
+func ParseToStructChDemo(ctx context.Context, client *base.Client, request types.ChatRequest) {
+	eventCh := client.AgentApp().Run(ctx, request).ParseToStructCh()
+	for {
+		select {
+		case msg, ok := <-eventCh:
+			// 这里的msg是一个大结构体 字段非常多
+			if !ok {
+				return
+			}
+			if msg.Event == "error" {
+				log.Printf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
+			}
+			if msg.Answer != "" {
+				fmt.Printf("%s", msg.Answer)
+			}
+		}
+	}
+}
+
+// SimplePrint调用示例
+func SimplePrintDemo(ctx context.Context, client *base.Client, request types.ChatRequest) {
+	eventCh := client.AgentApp().Run(ctx, request).SimplePrint()
+	for {
+		select {
+		case msg, ok := <-eventCh:
+			// 这里的msg是字符串
+			if !ok {
+				return
+			}
+			fmt.Printf("%s", msg)
+		}
+	}
+}
+
+// ParseToEventCh调用示例
+func ParseToEventChDemo(ctx context.Context, client *base.Client, request types.ChatRequest) {
+	eventCh := client.AgentApp().Run(ctx, request).ParseToEventCh()
+	for {
+		select {
+		case msg, ok := <-eventCh:
+			// 这里的msg是字符串
+			if !ok {
+				return
+			}
+			switch msg.Type {
+			case types.EVENT_AGENT_THOUGHT:
+				event := msg.Data.(*types.EventAgentThought)
+				fmt.Printf("agent thought: %s", event.Thought)
+			case types.EVENT_AGENT_MESSAGE:
+				event := msg.Data.(*types.EventAgentMessage)
+				fmt.Printf("%s", event.Answer)
+			}
+		}
+	}
+}
 
 ```
 
