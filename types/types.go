@@ -115,8 +115,8 @@ type ConversationRenameResp struct {
 	Inputs       interface{} `json:"inputs"`       // 用户输入参数
 	Status       string      `json:"status"`       // 会话状态
 	Introduction string      `json:"introduction"` // 开场白
-	CreatedAt    int         `json:"created_at"`   // 创建时间
-	UpdatedAt    int         `json:"updated_at"`   // 更新时间
+	CreatedAt    int64       `json:"created_at"`   // 创建时间
+	UpdatedAt    int64       `json:"updated_at"`   // 更新时间
 }
 
 type Text2Audio struct {
@@ -135,8 +135,8 @@ type Conversation struct {
 	Inputs       interface{} `json:"inputs,omitempty"`     // 用户输入参数
 	Status       string      `json:"status,omitempty"`     // 会话状态
 	Introduction string      `json:"introduction"`         // 开场白
-	CreatedAt    int         `json:"created_at,omitempty"` // 创建时间
-	UpdatedAt    int         `json:"updated_at,omitempty"` // 更新时间
+	CreatedAt    int64       `json:"created_at,omitempty"` // 创建时间
+	UpdatedAt    int64       `json:"updated_at,omitempty"` // 更新时间
 }
 type ConversationListResp struct {
 	Data    []Conversation `json:"data"`
@@ -164,13 +164,13 @@ type MessageHistory struct {
 			Observation string        `json:"observation"`
 			Tool        string        `json:"tool"`
 			ToolInput   string        `json:"tool_input"`
-			CreatedAt   int           `json:"created_at"`
+			CreatedAt   int64         `json:"created_at"`
 			ChainId     interface{}   `json:"chain_id"`
 			Files       []interface{} `json:"files"`
 			ToolLabels  interface{}   `json:"tool_labels"`
 		} `json:"agent_thoughts,omitempty"` //Agent思考内容 仅Agent类型有该内容
 		Answer             string      `json:"answer"` // 回答消息内容
-		CreatedAt          int         `json:"created_at"`
+		CreatedAt          int64       `json:"created_at"`
 		Feedback           interface{} `json:"feedback"` //  反馈信息
 		RetrieverResources []struct {
 			Position     int     `json:"position"`
@@ -259,7 +259,7 @@ type ChunkChatCompletionResponse struct {
 	MessageId            string   `json:"message_id,omitempty"`      // 消息唯一 ID
 	ConversationId       string   `json:"conversation_id,omitempty"` // 会话 ID
 	Answer               string   `json:"answer,omitempty"`          // LLM 返回文本块内容
-	CreatedAt            int      `json:"created_at,omitempty"`      // 创建时间戳
+	CreatedAt            int64    `json:"created_at,omitempty"`      // 创建时间戳
 	Id                   string   `json:"id,omitempty"`
 	Position             int64    `json:"position,omitempty"`      //agent_thought在消息中的位置
 	Thought              string   `json:"thought,omitempty"`       // agent的思考内容
@@ -278,7 +278,7 @@ type ChunkChatCompletionResponse struct {
 		Id                string                 `json:"id,omitempty"`                  // workflow 执行 ID
 		WorkflowId        string                 `json:"workflow_id,omitempty"`         // 关联 Workflow ID
 		SequenceNumber    int                    `json:"sequence_number,omitempty"`     // 自增序号，App 内自增，从 1 开始
-		CreatedAt         int                    `json:"created_at,omitempty"`          // 开始时间
+		CreatedAt         int64                  `json:"created_at,omitempty"`          // 开始时间
 		NodeId            string                 `json:"node_id,omitempty"`             // 节点 ID
 		NodeType          string                 `json:"node_type,omitempty"`           // 节点类型
 		Title             string                 `json:"title,omitempty"`               // 节点名称
@@ -308,7 +308,7 @@ type ChunkChatCompletionResponse struct {
 		ElapsedTime       float64 `json:"elapsed_time,omitempty"` // Optional 耗时(s)
 		TotalTokens       int     `json:"total_tokens,omitempty"` // Optional 总使用 tokens
 		TotalSteps        int     `json:"total_steps,omitempty"`  // 总步数（冗余），默认 0
-		FinishedAt        int     `json:"finished_at,omitempty"`  // 结束时间
+		FinishedAt        int64   `json:"finished_at,omitempty"`  // 结束时间
 		ExecutionMetadata struct {
 			TotalTokens int    `json:"total_tokens"` // optional 总使用 tokens
 			TotalPrice  string `json:"total_price"`  // optional 总费用
@@ -375,8 +375,8 @@ type WorkflowStatus struct {
 	Error       string  `json:"error"`        // 错误原因
 	TotalSteps  int     `json:"total_steps"`  // 任务执行总步数
 	TotalTokens int     `json:"total_tokens"` // 任务执行总 tokens
-	CreatedAt   string  `json:"created_at"`   // 任务开始时间
-	FinishedAt  string  `json:"finished_at"`  // 任务结束时间
+	CreatedAt   int64   `json:"created_at"`   // 任务开始时间
+	FinishedAt  int64   `json:"finished_at"`  // 任务结束时间
 	ElapsedTime float64 `json:"elapsed_time"` // 耗时(s)
 }
 
@@ -395,8 +395,8 @@ type WorkflowLogs struct {
 			ElapsedTime float64 `json:"elapsed_time"`    // 耗时，单位秒
 			TotalTokens int     `json:"total_tokens"`    // 消耗的token数量
 			TotalSteps  int     `json:"total_steps"`     // 执行步骤长度
-			CreatedAt   int     `json:"created_at"`      // 开始时间
-			FinishedAt  int     `json:"finished_at"`     // 结束时间
+			CreatedAt   int64     `json:"created_at"`      // 开始时间
+			FinishedAt  int64     `json:"finished_at"`     // 结束时间
 		} `json:"workflow_run"` // Workflow 执行日志
 		CreatedFrom      string `json:"created_from"`                 // 来源
 		CreatedByRole    string `json:"created_by_role"`              // 角色
@@ -407,6 +407,6 @@ type WorkflowLogs struct {
 			IsAnonymous bool   `json:"is_anonymous"` // 是否匿名
 			SessionId   string `json:"session_id"`   // 会话标识
 		} `json:"created_by_end_user"` // 用户
-		CreatedAt int `json:"created_at"` // 创建时间
+		CreatedAt int64 `json:"created_at"` // 创建时间
 	} `json:"data"`
 }
