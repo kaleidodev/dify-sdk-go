@@ -60,7 +60,7 @@ func TestWorkflowApp(t *testing.T) {
 				if msg.Event == "error" {
 					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
 				}
-				t.Log(msg.Answer)
+				t.Log(msg.Data.Outputs)
 			}
 		}
 	})
@@ -133,7 +133,7 @@ func TestWorkflowApp(t *testing.T) {
 				if msg.Event == "error" {
 					t.Logf("status=%d code=%s message=%s", msg.Status, msg.Code, msg.Message)
 				}
-				t.Log(msg.Answer)
+				t.Log(msg.Data.Outputs)
 				cnt++
 				if cnt == 1 {
 					err := client.WorkflowApp().Stop(msg.TaskId, "")

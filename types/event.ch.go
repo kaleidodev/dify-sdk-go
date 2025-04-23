@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 )
 
 type EventCh struct {
@@ -110,6 +111,11 @@ func (c *EventCh) SimplePrint() <-chan string {
 					str = eventData.Answer
 				case EVENT_WORKFLOW_STARTED:
 				case EVENT_WORKFLOW_FINISHED:
+					eventData := event.Data.(*EventWorkflowFinished)
+					for k, v := range eventData.Data.Outputs {
+						str = fmt.Sprintf("%s%s:%s,", str, k, v)
+					}
+					str = strings.TrimSuffix(str, ",")
 				case EVENT_NODE_STARTED:
 				case EVENT_NODE_FINISHED:
 				case EVENT_NODE_RETRY:

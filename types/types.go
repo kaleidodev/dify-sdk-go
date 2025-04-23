@@ -168,7 +168,7 @@ type MessageHistory struct {
 			ChainId     interface{}   `json:"chain_id"`
 			Files       []interface{} `json:"files"`
 			ToolLabels  interface{}   `json:"tool_labels"`
-		} `json:"agent_thoughts,omitempty"` //Agent思考内容 仅Agent类型有该内容
+		} `json:"agent_thoughts,omitempty"`            //Agent思考内容 仅Agent类型有该内容
 		Answer             string      `json:"answer"` // 回答消息内容
 		CreatedAt          int64       `json:"created_at"`
 		Feedback           interface{} `json:"feedback"` //  反馈信息
@@ -285,30 +285,13 @@ type ChunkChatCompletionResponse struct {
 		Index             int                    `json:"index,omitempty"`               // 执行序号，用于展示 Tracing Node 顺序
 		PredecessorNodeId string                 `json:"predecessor_node_id,omitempty"` // 前置节点 ID，用于画布展示执行路径
 		Inputs            map[string]interface{} `json:"inputs,omitempty"`              // 节点中所有使用到的前置节点变量内容
-		Outputs           struct {
-			Text  string `json:"text"`
-			Usage struct {
-				PromptTokens        int     `json:"prompt_tokens"`
-				PromptUnitPrice     string  `json:"prompt_unit_price"`
-				PromptPriceUnit     string  `json:"prompt_price_unit"`
-				PromptPrice         string  `json:"prompt_price"`
-				CompletionTokens    int     `json:"completion_tokens"`
-				CompletionUnitPrice string  `json:"completion_unit_price"`
-				CompletionPriceUnit string  `json:"completion_price_unit"`
-				CompletionPrice     string  `json:"completion_price"`
-				TotalTokens         int     `json:"total_tokens"`
-				TotalPrice          string  `json:"total_price"`
-				Currency            string  `json:"currency"`
-				Latency             float64 `json:"latency"`
-			} `json:"usage"`
-			FinishReason string `json:"finish_reason"`
-		} `json:"outputs,omitempty"` // Optional 输出内容
-		Status            string  `json:"status,omitempty"`       // 执行状态 running / succeeded / failed / stopped
-		Error             string  `json:"error,omitempty"`        // Optional 错误原因
-		ElapsedTime       float64 `json:"elapsed_time,omitempty"` // Optional 耗时(s)
-		TotalTokens       int     `json:"total_tokens,omitempty"` // Optional 总使用 tokens
-		TotalSteps        int     `json:"total_steps,omitempty"`  // 总步数（冗余），默认 0
-		FinishedAt        int64   `json:"finished_at,omitempty"`  // 结束时间
+		Outputs           map[string]interface{} `json:"outputs,omitempty"`             // Optional 输出内容
+		Status            string                 `json:"status,omitempty"`              // 执行状态 running / succeeded / failed / stopped
+		Error             string                 `json:"error,omitempty"`               // Optional 错误原因
+		ElapsedTime       float64                `json:"elapsed_time,omitempty"`        // Optional 耗时(s)
+		TotalTokens       int                    `json:"total_tokens,omitempty"`        // Optional 总使用 tokens
+		TotalSteps        int                    `json:"total_steps,omitempty"`         // 总步数（冗余），默认 0
+		FinishedAt        int64                  `json:"finished_at,omitempty"`         // 结束时间
 		ExecutionMetadata struct {
 			TotalTokens int    `json:"total_tokens"` // optional 总使用 tokens
 			TotalPrice  string `json:"total_price"`  // optional 总费用
@@ -395,9 +378,9 @@ type WorkflowLogs struct {
 			ElapsedTime float64 `json:"elapsed_time"`    // 耗时，单位秒
 			TotalTokens int     `json:"total_tokens"`    // 消耗的token数量
 			TotalSteps  int     `json:"total_steps"`     // 执行步骤长度
-			CreatedAt   int64     `json:"created_at"`      // 开始时间
-			FinishedAt  int64     `json:"finished_at"`     // 结束时间
-		} `json:"workflow_run"` // Workflow 执行日志
+			CreatedAt   int64   `json:"created_at"`      // 开始时间
+			FinishedAt  int64   `json:"finished_at"`     // 结束时间
+		} `json:"workflow_run"`                                       // Workflow 执行日志
 		CreatedFrom      string `json:"created_from"`                 // 来源
 		CreatedByRole    string `json:"created_by_role"`              // 角色
 		CreatedByAccount string `json:"created_by_account,omitempty"` // 帐号
@@ -406,7 +389,7 @@ type WorkflowLogs struct {
 			Type        string `json:"type"`         // 类型
 			IsAnonymous bool   `json:"is_anonymous"` // 是否匿名
 			SessionId   string `json:"session_id"`   // 会话标识
-		} `json:"created_by_end_user"` // 用户
+		} `json:"created_by_end_user"`      // 用户
 		CreatedAt int64 `json:"created_at"` // 创建时间
 	} `json:"data"`
 }
