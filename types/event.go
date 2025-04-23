@@ -43,9 +43,9 @@ type EventMessageEnd struct {
 	StreamResponse
 	ChatbotAppStreamResponse
 
-	Id       string                    `json:"id"`
-	Metadata Metadata                  `json:"metadata"` // 元数据
-	Files    *[]map[string]interface{} `json:"files,omitempty"`
+	Id       string   `json:"id"`
+	Metadata Metadata `json:"metadata"` // 元数据
+	Files    *[]File  `json:"files,omitempty"`
 }
 
 // EventTtsMessage TTS_MESSAGE = "tts_message"
@@ -125,20 +125,20 @@ type EventWorkflowFinished struct {
 	WorkflowAppStreamResponse // workflow_run_id
 
 	Data struct {
-		Id              string                   `json:"id"`
-		WorkflowId      string                   `json:"workflow_id"`
-		SequenceNumber  int                      `json:"sequence_number"`
-		Status          string                   `json:"status"`
-		Outputs         map[string]interface{}   `json:"outputs,omitempty"`
-		Error           string                   `json:"error,omitempty"`
-		ElapsedTime     float64                  `json:"elapsed_time"`
-		TotalTokens     int                      `json:"total_tokens"`
-		TotalSteps      int                      `json:"total_steps"`
-		CreatedBy       map[string]interface{}   `json:"created_by,omitempty"`
-		CreatedAt       int64                    `json:"created_at"`
-		FinishedAt      int64                    `json:"finished_at"`
-		ExceptionsCount int                      `json:"exceptions_count,omitempty"`
-		Files           []map[string]interface{} `json:"files,omitempty"`
+		Id              string                 `json:"id"`
+		WorkflowId      string                 `json:"workflow_id"`
+		SequenceNumber  int                    `json:"sequence_number"`
+		Status          string                 `json:"status"`
+		Outputs         map[string]interface{} `json:"outputs,omitempty"`
+		Error           string                 `json:"error,omitempty"`
+		ElapsedTime     float64                `json:"elapsed_time"`
+		TotalTokens     int                    `json:"total_tokens"`
+		TotalSteps      int                    `json:"total_steps"`
+		CreatedBy       map[string]interface{} `json:"created_by,omitempty"`
+		CreatedAt       int64                  `json:"created_at"`
+		FinishedAt      int64                  `json:"finished_at"`
+		ExceptionsCount int                    `json:"exceptions_count,omitempty"`
+		Files           []File                 `json:"files,omitempty"`
 	} `json:"data"`
 }
 
@@ -208,29 +208,29 @@ type EventNodeRetry struct {
 	WorkflowAppStreamResponse // workflow_run_id
 
 	Data struct {
-		Id                        string                   `json:"id"`
-		NodeId                    string                   `json:"node_id"`
-		NodeType                  string                   `json:"node_type"`
-		Title                     string                   `json:"title"`
-		Index                     int                      `json:"index"`
-		PredecessorNodeId         string                   `json:"predecessor_node_id,omitempty"`
-		Inputs                    map[string]interface{}   `json:"inputs,omitempty"`
-		ProcessData               map[string]interface{}   `json:"process_data,omitempty"`
-		Outputs                   map[string]interface{}   `json:"outputs,omitempty"`
-		Status                    string                   `json:"status"`
-		Error                     string                   `json:"error,omitempty"`
-		ElapsedTime               float64                  `json:"elapsed_time"`
-		ExecutionMetadata         map[string]interface{}   `json:"execution_metadata,omitempty"`
-		CreatedAt                 int64                    `json:"created_at"`
-		FinishedAt                int64                    `json:"finished_at"`
-		Files                     []map[string]interface{} `json:"files,omitempty"`
-		ParallelId                string                   `json:"parallel_id,omitempty"`
-		ParallelStartNodeId       string                   `json:"parallel_start_node_id,omitempty"`
-		ParentParallelId          string                   `json:"parent_parallel_id,omitempty"`
-		ParentParallelStartNodeId string                   `json:"parent_parallel_start_node_id,omitempty"`
-		IterationId               string                   `json:"iteration_id,omitempty"`
-		LoopId                    string                   `json:"loop_id,omitempty"`
-		RetryIndex                int64                    `json:"retry_index"`
+		Id                        string                 `json:"id"`
+		NodeId                    string                 `json:"node_id"`
+		NodeType                  string                 `json:"node_type"`
+		Title                     string                 `json:"title"`
+		Index                     int                    `json:"index"`
+		PredecessorNodeId         string                 `json:"predecessor_node_id,omitempty"`
+		Inputs                    map[string]interface{} `json:"inputs,omitempty"`
+		ProcessData               map[string]interface{} `json:"process_data,omitempty"`
+		Outputs                   map[string]interface{} `json:"outputs,omitempty"`
+		Status                    string                 `json:"status"`
+		Error                     string                 `json:"error,omitempty"`
+		ElapsedTime               float64                `json:"elapsed_time"`
+		ExecutionMetadata         map[string]interface{} `json:"execution_metadata,omitempty"`
+		CreatedAt                 int64                  `json:"created_at"`
+		FinishedAt                int64                  `json:"finished_at"`
+		Files                     []File                 `json:"files,omitempty"`
+		ParallelId                string                 `json:"parallel_id,omitempty"`
+		ParallelStartNodeId       string                 `json:"parallel_start_node_id,omitempty"`
+		ParentParallelId          string                 `json:"parent_parallel_id,omitempty"`
+		ParentParallelStartNodeId string                 `json:"parent_parallel_start_node_id,omitempty"`
+		IterationId               string                 `json:"iteration_id,omitempty"`
+		LoopId                    string                 `json:"loop_id,omitempty"`
+		RetryIndex                int64                  `json:"retry_index"`
 	} `json:"data"`
 }
 
@@ -280,7 +280,7 @@ type EventIterationStarted struct {
 		Title               string                 `json:"title"`
 		CreatedAt           int64                  `json:"created_at"`
 		Extras              map[string]interface{} `json:"extras,omitempty"`
-		Metadata            map[string]interface{} `json:"metadata,omitempty"`
+		Metadata            Metadata               `json:"metadata,omitempty"`
 		Inputs              map[string]interface{} `json:"inputs,omitempty"`
 		ParallelId          string                 `json:"parallel_id,omitempty"`
 		ParallelStartNodeId string                 `json:"parallel_start_node_id,omitempty"`
@@ -346,7 +346,7 @@ type EventLoopStarted struct {
 		Title               string                 `json:"title"`
 		CreatedAt           int64                  `json:"created_at"`
 		Extras              map[string]interface{} `json:"extras,omitempty"`
-		Metadata            map[string]interface{} `json:"metadata,omitempty"`
+		Metadata            Metadata               `json:"metadata,omitempty"`
 		Inputs              map[string]interface{} `json:"inputs,omitempty"`
 		ParallelId          string                 `json:"parallel_id,omitempty"`
 		ParallelStartNodeId string                 `json:"parallel_start_node_id,omitempty"`
@@ -431,7 +431,7 @@ type EventAgentLog struct {
 		Error           string                 `json:"error,omitempty"`
 		Status          string                 `json:"status"`
 		Data            map[string]interface{} `json:"data"`
-		Metadata        map[string]interface{} `json:"metadata,omitempty"`
+		Metadata        Metadata               `json:"metadata,omitempty"`
 		NodeId          string                 `json:"node_id"`
 	} `json:"data"`
 }

@@ -157,17 +157,17 @@ type MessageHistory struct {
 			BelongsTo string `json:"belongs_to"` // 文件归属方，user 或 assistant
 		} `json:"message_files"` // 消息文件
 		AgentThoughts []struct {
-			Id          string        `json:"id"`
-			MessageId   string        `json:"message_id"`
-			Position    int           `json:"position"`
-			Thought     string        `json:"thought"` // agent的思考内容
-			Observation string        `json:"observation"`
-			Tool        string        `json:"tool"`
-			ToolInput   string        `json:"tool_input"`
-			CreatedAt   int64         `json:"created_at"`
-			ChainId     interface{}   `json:"chain_id"`
-			Files       []interface{} `json:"files"`
-			ToolLabels  interface{}   `json:"tool_labels"`
+			Id          string      `json:"id"`
+			MessageId   string      `json:"message_id"`
+			Position    int         `json:"position"`
+			Thought     string      `json:"thought"` // agent的思考内容
+			Observation string      `json:"observation"`
+			Tool        string      `json:"tool"`
+			ToolInput   string      `json:"tool_input"`
+			CreatedAt   int64       `json:"created_at"`
+			ChainId     interface{} `json:"chain_id"`
+			Files       []File      `json:"files"`
+			ToolLabels  interface{} `json:"tool_labels"`
 		} `json:"agent_thoughts,omitempty"`            //Agent思考内容 仅Agent类型有该内容
 		Answer             string      `json:"answer"` // 回答消息内容
 		CreatedAt          int64       `json:"created_at"`
@@ -275,45 +275,32 @@ type ChunkChatCompletionResponse struct {
 	FromVariableSelector []string `json:"from_variable_selector,omitempty"`
 	WorkflowRunId        string   `json:"workflow_run_id,omitempty"` // workflow 执行 ID
 	Data                 struct {
-		Id                string                 `json:"id,omitempty"`                  // workflow 执行 ID
-		WorkflowId        string                 `json:"workflow_id,omitempty"`         // 关联 Workflow ID
-		SequenceNumber    int                    `json:"sequence_number,omitempty"`     // 自增序号，App 内自增，从 1 开始
-		CreatedAt         int64                  `json:"created_at,omitempty"`          // 开始时间
-		NodeId            string                 `json:"node_id,omitempty"`             // 节点 ID
-		NodeType          string                 `json:"node_type,omitempty"`           // 节点类型
-		Title             string                 `json:"title,omitempty"`               // 节点名称
-		Index             int                    `json:"index,omitempty"`               // 执行序号，用于展示 Tracing Node 顺序
-		PredecessorNodeId string                 `json:"predecessor_node_id,omitempty"` // 前置节点 ID，用于画布展示执行路径
-		Inputs            map[string]interface{} `json:"inputs,omitempty"`              // 节点中所有使用到的前置节点变量内容
-		Outputs           map[string]interface{} `json:"outputs,omitempty"`             // Optional 输出内容
-		Status            string                 `json:"status,omitempty"`              // 执行状态 running / succeeded / failed / stopped
-		Error             string                 `json:"error,omitempty"`               // Optional 错误原因
-		ElapsedTime       float64                `json:"elapsed_time,omitempty"`        // Optional 耗时(s)
-		TotalTokens       int                    `json:"total_tokens,omitempty"`        // Optional 总使用 tokens
-		TotalSteps        int                    `json:"total_steps,omitempty"`         // 总步数（冗余），默认 0
-		FinishedAt        int64                  `json:"finished_at,omitempty"`         // 结束时间
-		ExecutionMetadata struct {
-			TotalTokens int    `json:"total_tokens"` // optional 总使用 tokens
-			TotalPrice  string `json:"total_price"`  // optional 总费用
-			Currency    string `json:"currency"`     // optional 货币
-		} `json:"execution_metadata,omitempty"`
-		ProcessData struct {
-			ModelMode string `json:"model_mode"`
-			Prompts   []struct {
-				Role  string        `json:"role"`
-				Text  string        `json:"text"`
-				Files []interface{} `json:"files"`
-			} `json:"prompts"`
-			ModelProvider string `json:"model_provider"`
-			ModelName     string `json:"model_name"`
-		} `json:"process_data,omitempty"`
-		Files                     []interface{} `json:"files,omitempty"`
-		ParallelId                string        `json:"parallel_id,omitempty"`
-		ParallelStartNodeId       string        `json:"parallel_start_node_id,omitempty"`
-		ParentParallelId          string        `json:"parent_parallel_id,omitempty"`
-		ParentParallelStartNodeId string        `json:"parent_parallel_start_node_id,omitempty"`
-		IterationId               string        `json:"iteration_id,omitempty"`
-		LoopId                    string        `json:"loop_id,omitempty"`
+		Id                        string                 `json:"id,omitempty"`                  // workflow 执行 ID
+		WorkflowId                string                 `json:"workflow_id,omitempty"`         // 关联 Workflow ID
+		SequenceNumber            int                    `json:"sequence_number,omitempty"`     // 自增序号，App 内自增，从 1 开始
+		CreatedAt                 int64                  `json:"created_at,omitempty"`          // 开始时间
+		NodeId                    string                 `json:"node_id,omitempty"`             // 节点 ID
+		NodeType                  string                 `json:"node_type,omitempty"`           // 节点类型
+		Title                     string                 `json:"title,omitempty"`               // 节点名称
+		Index                     int                    `json:"index,omitempty"`               // 执行序号，用于展示 Tracing Node 顺序
+		PredecessorNodeId         string                 `json:"predecessor_node_id,omitempty"` // 前置节点 ID，用于画布展示执行路径
+		Inputs                    map[string]interface{} `json:"inputs,omitempty"`              // 节点中所有使用到的前置节点变量内容
+		Outputs                   map[string]interface{} `json:"outputs,omitempty"`             // Optional 输出内容
+		Status                    string                 `json:"status,omitempty"`              // 执行状态 running / succeeded / failed / stopped
+		Error                     string                 `json:"error,omitempty"`               // Optional 错误原因
+		ElapsedTime               float64                `json:"elapsed_time,omitempty"`        // Optional 耗时(s)
+		TotalTokens               int                    `json:"total_tokens,omitempty"`        // Optional 总使用 tokens
+		TotalSteps                int                    `json:"total_steps,omitempty"`         // 总步数（冗余），默认 0
+		FinishedAt                int64                  `json:"finished_at,omitempty"`         // 结束时间
+		ExecutionMetadata         map[string]interface{} `json:"execution_metadata,omitempty"`
+		ProcessData               map[string]interface{} `json:"process_data,omitempty"`
+		Files                     []File                 `json:"files,omitempty"`
+		ParallelId                string                 `json:"parallel_id,omitempty"`
+		ParallelStartNodeId       string                 `json:"parallel_start_node_id,omitempty"`
+		ParentParallelId          string                 `json:"parent_parallel_id,omitempty"`
+		ParentParallelStartNodeId string                 `json:"parent_parallel_start_node_id,omitempty"`
+		IterationId               string                 `json:"iteration_id,omitempty"`
+		LoopId                    string                 `json:"loop_id,omitempty"`
 	} `json:"data,omitempty"`
 	Status  int    `json:"status,omitempty"`  // HTTP 状态码
 	Code    string `json:"code,omitempty"`    // 错误码
