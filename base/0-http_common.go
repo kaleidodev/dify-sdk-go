@@ -150,7 +150,14 @@ func (c *HttpClient) SendRawRequest(ctx context.Context, method, apiUrl string, 
 
 func (c *HttpClient) SendRequest(req *http.Request) (*http.Response, error) {
 	resp, err := c.httpClient.Do(req)
-	if resp != nil && resp.StatusCode == http.StatusUnauthorized { // 解决服务端长时间空闲后首次请求失败的问题
+	if resp != nil && resp.StatusCode == http.StatusInternalServerError { // 解决服务端长时间空闲后首次请求失败的问题
+		/*
+			HTTP/1.1 500 INTERNAL SERVER ERROR
+			{
+			"message": "Internal Server Error",
+			"code": "unknown"
+			}
+		*/
 		time.Sleep(time.Second * 1)
 		log.Println("[Warn] 服务端响应状态码500 执行重试逻辑 ...")
 		return c.httpClient.Do(req)

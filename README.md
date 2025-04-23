@@ -238,7 +238,7 @@ func ParseToEventChDemo(ctx context.Context, client *base.Client, request types.
 	for {
 		select {
 		case msg, ok := <-eventCh:
-			// 这里的msg是字符串
+			// 这里的msg是具体的结构体，需要根据msg.Type的值进行断言
 			if !ok {
 				return
 			}
