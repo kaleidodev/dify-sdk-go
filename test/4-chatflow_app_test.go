@@ -245,4 +245,38 @@ func TestChatflowApp(t *testing.T) {
 		resp, err := client.ChatflowApp().AppMeta()
 		t.Logf("resp=%v err=%v", resp, err)
 	})
+
+	t.Run("Chatflow_AnnotationList", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AnnotationList(0, 0)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatflow_AnnotationCreate", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AnnotationCreate("我的问题", "我的答案")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatflow_AnnotationUpdate", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AnnotationUpdate("我的问题222", "aaa", "1aa66cc3-4d38-46ba-b749-640a32fe0adf")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatflow_AnnotationDel", func(t *testing.T) {
+		err := client.ChatflowApp().AnnotationDel("1aa66cc3-4d38-46ba-b749-640a32fe0adf")
+		t.Logf("err=%v", err)
+	})
+
+	t.Run("Chatflow_AnnotationReplySetting", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AnnotationReplySetting(types.AnnotationEnable, types.AnnotationSetting{
+			EmbeddingProviderName: "langgenius/tongyi/tongyi",
+			EmbeddingModelName:    "text-embedding-v1",
+			ScoreThreshold:        0.8,
+		})
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatflow_AnnotationReplySettingJobStatus", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AnnotationReplySettingJobStatus(types.AnnotationEnable, "4f2adf84-73db-4590-9194-8e0cb0e8c97a")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
 }

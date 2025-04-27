@@ -80,8 +80,8 @@
 ### 应用接口矩阵
 
 
-| Dify 接口                                                                         | Chatbot/Agent | Completion | Chatflow | Workflow | SDK 对应函数                         |
-| --------------------------------------------------------------------------------- | ------------- | ---------- | -------- | -------- | ------------------------------------ |
+| Dify 接口                                                                         | Chatbot/Agent | Completion | Chatflow | Workflow | SDK 对应函数                             |
+| --------------------------------------------------------------------------------- | ------------- | ---------- | -------- | -------- |--------------------------------------|
 | POST`/chat-messages` 发送对话消息                                                 | 1             |            | 1        |          | Run/RunBlock                         |
 | POST`/completion-messages` 发送消息                                               |               | 1          |          |          |                                      |
 | POST`/workflows/run` 执行 workflow                                                |               |            |          | 1        |                                      |
@@ -110,7 +110,7 @@
 | PUT`/apps/annotations/{annotation_id}` 更新标注                                   |               | 1          | 1        |          | AnnotationUpdate                     |
 | DELETE`/apps/annotations/{annotation_id}` 删除标注                                |               | 1          | 1        |          | AnnotationDel                        |
 | POST`/apps/annotation-reply/{action}` 标注回复初始设置                            |               | 1          | 1        |          | AnnotationReplySetting               |
-| GET`/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态 |               | 1          | 1        |          | AnnotationReplyJobStatus             |
+| GET`/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态 |               | 1          | 1        |          | AnnotationReplySettingJobStatus      |
 |                                                                                   |               |            |          |          |                                      |
 
 ### dify 接口 api 文档

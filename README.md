@@ -22,32 +22,38 @@ Dify一共有5种应用类型，具体如下：
 每种应用类型拥有的API接口并不完全相同，下表列出了Dify每种应用的Api接口和在SDK中对应的函数关系。
 
 
-| 功能                   | SDK函数                              | Chatbot/Agent | Completion | Chatflow | Workflow | Dify接口                                     |
-| ---------------------- | ------------------------------------ | ------------- | ---------- | -------- | -------- | -------------------------------------------- |
-| 发送对话消息           | Run/RunBlock                         | 1             |            | 1        |          | POST`/chat-messages`                        |
-| 发送消息               | Run/RunBlock                         |               | 1          |          |          | POST`/completion-messages`                  |
-| 执行workflow           | Run/RunBlock                         |               |            |          | 1        | POST`/workflows/run`                        |
-| --                     |                                      |               |            |          |          |                                              |
-| 停止响应               | Stop                                 | 1             |            | 1        |          | POST`/chat-messages/:task_id/stop`          |
-| 停止响应               | Stop                                 |               | 1          |          |          | POST`/completion-messages/:task_id/stop`    |
-| 停止响应               | Stop                                 |               |            |          | 1        | POST`/workflows/tasks/:task_id/stop`        |
-| --                     |                                      |               |            |          |          |                                              |
-| 上传文件               | UploadFile                           | 1             | 1          | 1        | 1        | POST`/files/upload`                         |
-| 获取应用基本信息       | AppInfo                              | 1             | 1          | 1        | 1        | GET`/info`                                  |
-| 获取应用参数           | AppParameter                         | 1             | 1          | 1        | 1        | GET`/parameters`                            |
-| --                     |                                      |               |            |          |          |                                              |
-| 获取workflow执行情况   | Status                               |               |            |          | 1        | GET`/workflows/run/:workflow_id`            |
-| 消息反馈(点赞)         | MsgFeedback                          | 1             | 1          | 1        |          | POST`/messages/:message_id/feedbacks`       |
-| 获取下一轮建议问题列表 | SuggestQuestionList                  | 1             |            | 1        |          | GET`/messages/{message_id}/suggested`       |
-| 获取会话历史消息       | History/HistoryPro                   | 1             |            | 1        |          | GET`/messages`                              |
-| 获取workflow日志       | Logs                                 |               |            |          | 1        | GET`/workflows/logs`                        |
-| 获取会话列表           | ConversationList/ConversationListPro | 1             |            | 1        |          | GET`/conversations`                         |
-| 删除会话               | ConversationDel                      | 1             |            | 1        |          | DELETE`/conversations/:conversation_id`     |
-| 会话重命名             | ConversationRename                   | 1             |            | 1        |          | POST`/conversations/:conversation_id/name`  |
-| 语音转文字             | AudioToText                          | 1             |            | 1        |          | POST`/audio-to-text`                        |
-| 文字转语音             | TextToAudio                          | 1             | 1          | 1        |          | POST`/text-to-audio`                        |
-| 获取应用Meta信息       | AppMeta                              | 1             |            | 1        |          | GET`/meta`                                  |
-| --                     |                                      |               |            |          |          |                                              |
+| 功能                         | SDK函数                              | Chatbot/Agent | Completion | Chatflow | Workflow | Dify接口                                             |
+| ---------------------------- | ------------------------------------ | ------------- | ---------- | -------- | -------- | ---------------------------------------------------- |
+| 发送对话消息                 | Run/RunBlock                         | 1             |            | 1        |          | POST`/chat-messages`                                |
+| 发送消息                     | Run/RunBlock                         |               | 1          |          |          | POST`/completion-messages`                          |
+| 执行workflow                 | Run/RunBlock                         |               |            |          | 1        | POST`/workflows/run`                                |
+| --                           |                                      |               |            |          |          |                                                      |
+| 停止响应                     | Stop                                 | 1             |            | 1        |          | POST`/chat-messages/:task_id/stop`                  |
+| 停止响应                     | Stop                                 |               | 1          |          |          | POST`/completion-messages/:task_id/stop`            |
+| 停止响应                     | Stop                                 |               |            |          | 1        | POST`/workflows/tasks/:task_id/stop`                |
+| --                           |                                      |               |            |          |          |                                                      |
+| 上传文件                     | UploadFile                           | 1             | 1          | 1        | 1        | POST`/files/upload`                                 |
+| 获取应用基本信息             | AppInfo                              | 1             | 1          | 1        | 1        | GET`/info`                                          |
+| 获取应用参数                 | AppParameter                         | 1             | 1          | 1        | 1        | GET`/parameters`                                    |
+| --                           |                                      |               |            |          |          |                                                      |
+| 获取workflow执行情况         | Status                               |               |            |          | 1        | GET`/workflows/run/:workflow_id`                    |
+| 消息反馈(点赞)               | MsgFeedback                          | 1             | 1          | 1        |          | POST`/messages/:message_id/feedbacks`               |
+| 获取下一轮建议问题列表       | SuggestQuestionList                  | 1             |            | 1        |          | GET`/messages/{message_id}/suggested`               |
+| 获取会话历史消息             | History/HistoryPro                   | 1             |            | 1        |          | GET`/messages`                                      |
+| 获取workflow日志             | Logs                                 |               |            |          | 1        | GET`/workflows/logs`                                |
+| 获取会话列表                 | ConversationList/ConversationListPro | 1             |            | 1        |          | GET`/conversations`                                 |
+| 删除会话                     | ConversationDel                      | 1             |            | 1        |          | DELETE`/conversations/:conversation_id`             |
+| 会话重命名                   | ConversationRename                   | 1             |            | 1        |          | POST`/conversations/:conversation_id/name`          |
+| 语音转文字                   | AudioToText                          | 1             |            | 1        |          | POST`/audio-to-text`                                |
+| 文字转语音                   | TextToAudio                          | 1             | 1          | 1        |          | POST`/text-to-audio`                                |
+| 获取应用Meta信息             | AppMeta                              | 1             |            | 1        |          | GET`/meta`                                          |
+| 获取标注列表                 | AnnotationList                       |               | 1          | 1        |          | GET`/apps/annotations`                               |
+| 创建标注                     | AnnotationCreate                     |               | 1          | 1        |          | POST`/apps/annotations`                              |
+| 更新标注                     | AnnotationUpdate                     |               | 1          | 1        |          | PUT`/apps/annotations/{annotation_id}`               |
+| 删除标注                     | AnnotationDel                        |               | 1          | 1        |          | DELETE`/apps/annotations/{annotation_id}`            |
+| 标注回复初始设置             | AnnotationReplySetting               |               | 1          | 1        |          | POST`/apps/annotation-reply/{action}`                |
+| 查询标注回复初始设置任务状态 | AnnotationReplySettingJobStatus      |               | 1          | 1        |          | GET`/apps/annotation-reply/{action}/status/{job_id}` |
+| --                           |                                      |               |            |          |          |                                                      |
 
 ### 创建Client
 
@@ -87,16 +93,17 @@ ClientConfig有两个必填参数ApiServer和ApiKey，由于很多接口都需�
 - 如果是 Chatflow 类型，则是 client.ChatflowApp()
 - 如果是 工作流 Workflow 类型，则是 client.WorkflowApp()
 
-需要注意的是，对于流式调用，这里提供了三种结果的输出方式:  
-- 方式一：将SSE Event事件解析为一个大而全的结构体，再通过channel输出  
-    优点是输出是固定的结构体，但这个结构体字段很多，很多字段会是空值，使用时不方便判断哪些字段是有用的，哪些是没用的  
-    调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).ParseToStructCh()`  
-- 方式二：将SSE Event事件中的输出以文本字符串方式，通过channel提供出来  
-    优点是只输出最终文本内容，其他内容不输出，使用最简单  
-    调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).SimplePrint()`  
-- 方式三：将SSE Event按事件类型，解析为具体的结构体，然后通过channel提供  
-    优点是不同的event事件类型，对应不同的结构体，更加精准，但是使用前需要做类型断言 如：`msg.Data.(*types.EventMessage)`  
-    调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).ParseToEventCh()`  
+需要注意的是，对于流式调用，这里提供了三种结果的输出方式:
+
+- 方式一：将SSE Event事件解析为一个大而全的结构体，再通过channel输出
+  优点是输出是固定的结构体，但这个结构体字段很多，很多字段会是空值，使用时不方便判断哪些字段是有用的，哪些是没用的
+  调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).ParseToStructCh()`
+- 方式二：将SSE Event事件中的输出以文本字符串方式，通过channel提供出来
+  优点是只输出最终文本内容，其他内容不输出，使用最简单
+  调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).SimplePrint()`
+- 方式三：将SSE Event按事件类型，解析为具体的结构体，然后通过channel提供
+  优点是不同的event事件类型，对应不同的结构体，更加精准，但是使用前需要做类型断言 如：`msg.Data.(*types.EventMessage)`
+  调用示例：`eventCh := client.AgentApp().Run(ctx, types.ChatRequest{}).ParseToEventCh()`
 
 ### 一个完整的示例
 

@@ -196,4 +196,38 @@ func TestCompletionApp(t *testing.T) {
 		})
 		t.Logf("resp=%v err=%v", "", err)
 	})
+
+	t.Run("Completion_AnnotationList", func(t *testing.T) {
+		resp, err := client.CompletionApp().AnnotationList(0, 0)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Completion_AnnotationCreate", func(t *testing.T) {
+		resp, err := client.CompletionApp().AnnotationCreate("我的问题", "我的答案")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Completion_AnnotationUpdate", func(t *testing.T) {
+		resp, err := client.CompletionApp().AnnotationUpdate("我的问题222", "aaa", "044d9e78-128e-4dd2-80c0-6fd5b7053b3f")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Completion_AnnotationDel", func(t *testing.T) {
+		err := client.CompletionApp().AnnotationDel("044d9e78-128e-4dd2-80c0-6fd5b7053b3f")
+		t.Logf("err=%v", err)
+	})
+
+	t.Run("Completion_AnnotationReplySetting", func(t *testing.T) {
+		resp, err := client.CompletionApp().AnnotationReplySetting(types.AnnotationEnable, types.AnnotationSetting{
+			EmbeddingProviderName: "langgenius/tongyi/tongyi",
+			EmbeddingModelName:    "text-embedding-v1",
+			ScoreThreshold:        0.8,
+		})
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Completion_AnnotationReplySettingJobStatus", func(t *testing.T) {
+		resp, err := client.CompletionApp().AnnotationReplySettingJobStatus(types.AnnotationEnable, "0af37662-561b-48ec-977c-c87d4d99b228")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
 }

@@ -46,3 +46,10 @@ const (
 	EVENT_TEXT_REPLACE             = "text_replace"
 	EVENT_AGENT_LOG                = "agent_log"
 )
+
+type AnnotationAction string
+
+const (
+	AnnotationEnable  AnnotationAction = "enable"
+	AnnotationDisable AnnotationAction = "disable"
+)
