@@ -259,7 +259,8 @@ type ChunkChatCompletionResponse struct {
 	MessageId            string   `json:"message_id,omitempty"`      // 消息唯一 ID
 	ConversationId       string   `json:"conversation_id,omitempty"` // 会话 ID
 	Answer               string   `json:"answer,omitempty"`          // LLM 返回文本块内容
-	CreatedAt            int64    `json:"created_at,omitempty"`      // 创建时间戳
+	Reason               string   `json:"reason,omitempty"`
+	CreatedAt            int64    `json:"created_at,omitempty"` // 创建时间戳
 	Id                   string   `json:"id,omitempty"`
 	Position             int64    `json:"position,omitempty"`      //agent_thought在消息中的位置
 	Thought              string   `json:"thought,omitempty"`       // agent的思考内容
@@ -378,5 +379,19 @@ type WorkflowLogs struct {
 			SessionId   string `json:"session_id"`   // 会话标识
 		} `json:"created_by_end_user"` // 用户
 		CreatedAt int64 `json:"created_at"` // 创建时间
+	} `json:"data"`
+}
+
+type ConversationVarsResp struct {
+	Limit   int64 `json:"limit"`
+	HasMore bool  `json:"has_more"`
+	Data    []struct {
+		Id          string `json:"id"`
+		Name        string `json:"name"`
+		ValueType   string `json:"value_type"`
+		Value       string `json:"value"`
+		Description string `json:"description"`
+		CreatedAt   int64  `json:"created_at"`
+		UpdatedAt   int64  `json:"updated_at"`
 	} `json:"data"`
 }

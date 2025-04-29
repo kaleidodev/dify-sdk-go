@@ -24,29 +24,30 @@ Dify一共有5种应用类型，具体如下：
 
 | 功能                         | SDK函数                              | Chatbot/Agent | Completion | Chatflow | Workflow | Dify接口                                             |
 | ---------------------------- | ------------------------------------ | ------------- | ---------- | -------- | -------- | ---------------------------------------------------- |
-| 发送对话消息                 | Run/RunBlock                         | 1             |            | 1        |          | POST`/chat-messages`                                |
-| 发送消息                     | Run/RunBlock                         |               | 1          |          |          | POST`/completion-messages`                          |
-| 执行workflow                 | Run/RunBlock                         |               |            |          | 1        | POST`/workflows/run`                                |
+| 发送对话消息                 | Run/RunBlock                         | 1             |            | 1        |          | POST`/chat-messages`                               |
+| 发送消息                     | Run/RunBlock                         |               | 1          |          |          | POST`/completion-messages`                         |
+| 执行workflow                 | Run/RunBlock                         |               |            |          | 1        | POST`/workflows/run`                               |
 | --                           |                                      |               |            |          |          |                                                      |
-| 停止响应                     | Stop                                 | 1             |            | 1        |          | POST`/chat-messages/:task_id/stop`                  |
-| 停止响应                     | Stop                                 |               | 1          |          |          | POST`/completion-messages/:task_id/stop`            |
-| 停止响应                     | Stop                                 |               |            |          | 1        | POST`/workflows/tasks/:task_id/stop`                |
+| 停止响应                     | Stop                                 | 1             |            | 1        |          | POST`/chat-messages/:task_id/stop`                 |
+| 停止响应                     | Stop                                 |               | 1          |          |          | POST`/completion-messages/:task_id/stop`           |
+| 停止响应                     | Stop                                 |               |            |          | 1        | POST`/workflows/tasks/:task_id/stop`               |
 | --                           |                                      |               |            |          |          |                                                      |
-| 上传文件                     | UploadFile                           | 1             | 1          | 1        | 1        | POST`/files/upload`                                 |
-| 获取应用基本信息             | AppInfo                              | 1             | 1          | 1        | 1        | GET`/info`                                          |
-| 获取应用参数                 | AppParameter                         | 1             | 1          | 1        | 1        | GET`/parameters`                                    |
+| 上传文件                     | UploadFile                           | 1             | 1          | 1        | 1        | POST`/files/upload`                                |
+| 获取应用基本信息             | AppInfo                              | 1             | 1          | 1        | 1        | GET`/info`                                         |
+| 获取应用参数                 | AppParameter                         | 1             | 1          | 1        | 1        | GET`/parameters`                                   |
 | --                           |                                      |               |            |          |          |                                                      |
-| 获取workflow执行情况         | Status                               |               |            |          | 1        | GET`/workflows/run/:workflow_id`                    |
-| 消息反馈(点赞)               | MsgFeedback                          | 1             | 1          | 1        |          | POST`/messages/:message_id/feedbacks`               |
-| 获取下一轮建议问题列表       | SuggestQuestionList                  | 1             |            | 1        |          | GET`/messages/{message_id}/suggested`               |
-| 获取会话历史消息             | History/HistoryPro                   | 1             |            | 1        |          | GET`/messages`                                      |
-| 获取workflow日志             | Logs                                 |               |            |          | 1        | GET`/workflows/logs`                                |
-| 获取会话列表                 | ConversationList/ConversationListPro | 1             |            | 1        |          | GET`/conversations`                                 |
-| 删除会话                     | ConversationDel                      | 1             |            | 1        |          | DELETE`/conversations/:conversation_id`             |
-| 会话重命名                   | ConversationRename                   | 1             |            | 1        |          | POST`/conversations/:conversation_id/name`          |
-| 语音转文字                   | AudioToText                          | 1             |            | 1        |          | POST`/audio-to-text`                                |
-| 文字转语音                   | TextToAudio                          | 1             | 1          | 1        |          | POST`/text-to-audio`                                |
-| 获取应用Meta信息             | AppMeta                              | 1             |            | 1        |          | GET`/meta`                                          |
+| 获取workflow执行情况         | Status                               |               |            |          | 1        | GET`/workflows/run/:workflow_id`                   |
+| 消息反馈(点赞)               | MsgFeedback                          | 1             | 1          | 1        |          | POST`/messages/:message_id/feedbacks`              |
+| 获取下一轮建议问题列表       | SuggestQuestionList                  | 1             |            | 1        |          | GET`/messages/{message_id}/suggested`              |
+| 获取会话历史消息             | History/HistoryPro                   | 1             |            | 1        |          | GET`/messages`                                     |
+| 获取workflow日志             | Logs                                 |               |            |          | 1        | GET`/workflows/logs`                               |
+| 获取会话列表                 | ConversationList/ConversationListPro | 1             |            | 1        |          | GET`/conversations`                                |
+| 删除会话                     | ConversationDel                      | 1             |            | 1        |          | DELETE`/conversations/:conversation_id`            |
+| 会话重命名                   | ConversationRename                   | 1             |            | 1        |          | POST`/conversations/:conversation_id/name`         |
+| 获取对话变量                 | ConversationVars                     | 1             |            | 1        |          | GET`/conversations/:conversation_id/variables`       |
+| 语音转文字                   | AudioToText                          | 1             |            | 1        |          | POST`/audio-to-text`                               |
+| 文字转语音                   | TextToAudio                          | 1             | 1          | 1        |          | POST`/text-to-audio`                               |
+| 获取应用Meta信息             | AppMeta                              | 1             |            | 1        |          | GET`/meta`                                         |
 | 获取标注列表                 | AnnotationList                       |               | 1          | 1        |          | GET`/apps/annotations`                               |
 | 创建标注                     | AnnotationCreate                     |               | 1          | 1        |          | POST`/apps/annotations`                              |
 | 更新标注                     | AnnotationUpdate                     |               | 1          | 1        |          | PUT`/apps/annotations/{annotation_id}`               |

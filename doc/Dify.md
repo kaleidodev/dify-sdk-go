@@ -22,11 +22,12 @@
 7. GET `/conversations` 获取会话列表
 8. DELETE `/conversations/:conversation_id` 删除会话
 9. POST `/conversations/:conversation_id/name` 会话重命名
-10. POST `/audio-to-text` 语音转文字
-11. POST `/text-to-audio` 文字转语音
-12. GET `/info` 获取应用基本信息
-13. GET `/parameters` 获取应用参数
-14. GET `/meta` 获取应用 Meta 信息
+10. GET `/conversations/:conversation_id/variables` 获取对话变量
+11. POST `/audio-to-text` 语音转文字
+12. POST `/text-to-audio` 文字转语音
+13. GET `/info` 获取应用基本信息
+14. GET `/parameters` 获取应用参数
+15. GET `/meta` 获取应用 Meta 信息
 
 #### 2、Completion
 
@@ -55,17 +56,18 @@
 7. GET `/conversations` 获取会话列表
 8. DELETE `/conversations/:conversation_id` 删除会话
 9. POST `/conversations/:conversation_id/name` 会话重命名
-10. POST `/audio-to-text` 语音转文字
-11. POST `/text-to-audio` 文字转语音
-12. GET `/info` 获取应用基本信息
-13. GET `/parameters` 获取应用参数
-14. GET `/meta` 获取应用 Meta 信息
-15. GET `/apps/annotations` 获取标注列表
-16. POST `/apps/annotations` 创建标注
-17. PUT `/apps/annotations/{annotation_id}` 更新标注
-18. DELETE `/apps/annotations/{annotation_id}` 删除标注
-19. POST `/apps/annotation-reply/{action}` 标注回复初始设置
-20. GET `/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态
+10. GET `/conversations/:conversation_id/variables` 获取对话变量
+11. POST `/audio-to-text` 语音转文字
+12. POST `/text-to-audio` 文字转语音
+13. GET `/info` 获取应用基本信息
+14. GET `/parameters` 获取应用参数
+15. GET `/meta` 获取应用 Meta 信息
+16. GET `/apps/annotations` 获取标注列表
+17. POST `/apps/annotations` 创建标注
+18. PUT `/apps/annotations/{annotation_id}` 更新标注
+19. DELETE `/apps/annotations/{annotation_id}` 删除标注
+20. POST `/apps/annotation-reply/{action}` 标注回复初始设置
+21. GET `/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态
 
 #### 4、Workflow
 
@@ -80,8 +82,8 @@
 ### 应用接口矩阵
 
 
-| Dify 接口                                                                         | Chatbot/Agent | Completion | Chatflow | Workflow | SDK 对应函数                             |
-| --------------------------------------------------------------------------------- | ------------- | ---------- | -------- | -------- |--------------------------------------|
+| Dify 接口                                                                         | Chatbot/Agent | Completion | Chatflow | Workflow | SDK 对应函数                         |
+| --------------------------------------------------------------------------------- | ------------- | ---------- | -------- | -------- | ------------------------------------ |
 | POST`/chat-messages` 发送对话消息                                                 | 1             |            | 1        |          | Run/RunBlock                         |
 | POST`/completion-messages` 发送消息                                               |               | 1          |          |          |                                      |
 | POST`/workflows/run` 执行 workflow                                                |               |            |          | 1        |                                      |
@@ -102,6 +104,7 @@
 | GET`/conversations` 获取会话列表                                                  | 1             |            | 1        |          | ConversationList/ConversationListPro |
 | DELETE`/conversations/:conversation_id` 删除会话                                  | 1             |            | 1        |          | ConversationDel                      |
 | POST`/conversations/:conversation_id/name` 会话重命名                             | 1             |            | 1        |          | ConversationRename                   |
+| GET`/conversations/:conversation_id/variables` 获取对话变量                       | 1             |            | 1        |          | ConversationVars                     |
 | POST`/audio-to-text` 语音转文字                                                   | 1             |            | 1        |          | AudioToText                          |
 | POST`/text-to-audio` 文字转语音                                                   | 1             | 1          | 1        |          | TextToAudio                          |
 | GET`/meta` 获取应用 Meta 信息                                                     | 1             |            | 1        |          | AppMeta                              |

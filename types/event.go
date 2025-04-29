@@ -79,6 +79,7 @@ type EventMessageReplace struct {
 	StreamResponse
 
 	Answer string `json:"answer"`
+	Reason string `json:"reason"`
 }
 
 // EventAgentThought AGENT_THOUGHT = "agent_thought"

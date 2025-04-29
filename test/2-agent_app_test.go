@@ -264,6 +264,11 @@ func TestAgentApp(t *testing.T) {
 		t.Logf("resp=%v err=%v", resp, err)
 	})
 
+	t.Run("Agent_ConversationVars", func(t *testing.T) {
+		resp, err := client.AgentApp().ConversationVars("936221e9-1779-467a-bbfb-319ecae9864f", "", "", 0)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
 	t.Run("Agent_AudioToText", func(t *testing.T) {
 		client.AgentApp().AudioToText("", nil, "")
 	})

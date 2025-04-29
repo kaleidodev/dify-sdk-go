@@ -38,6 +38,7 @@ type Chatbot interface {
 	ConversationListPro(user, lastId, sortBy string, limit int64) (resp types.ConversationListResp, err error)
 	ConversationDel(conversationId, user string) error
 	ConversationRename(rename types.ConversationRenameReq) (resp types.ConversationRenameResp, err error)
+	ConversationVars(conversationId, user, lastId string, limit int64) (resp types.ConversationVarsResp, err error)
 	AudioToText(filePath string, f *os.File, user string) (text string, err error)
 	TextToAudio(info types.Text2Audio) error
 	AppMeta() (resp types.AppMeta, err error)
@@ -68,6 +69,7 @@ type Chatflow interface {
 	ConversationListPro(user, lastId, sortBy string, limit int64) (resp types.ConversationListResp, err error)
 	ConversationDel(conversationId, user string) error
 	ConversationRename(rename types.ConversationRenameReq) (resp types.ConversationRenameResp, err error)
+	ConversationVars(conversationId, user, lastId string, limit int64) (resp types.ConversationVarsResp, err error)
 	AudioToText(filePath string, f *os.File, user string) (text string, err error)
 	TextToAudio(info types.Text2Audio) error
 	AppMeta() (resp types.AppMeta, err error)

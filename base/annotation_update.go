@@ -28,8 +28,7 @@ func (c *AppClient) AnnotationUpdate(question, answer, annotationId string) (res
 		Answer:   answer,
 	}
 
-	// todo 文档中是PUT方法 实际需要使用POST方法
-	httpReq, err := (*Client)(c).HttpClient().CreateBaseRequest(context.Background(), http.MethodPost, fmt.Sprintf("/apps/annotations/%s", annotationId), req)
+	httpReq, err := (*Client)(c).HttpClient().CreateBaseRequest(context.Background(), http.MethodPut, fmt.Sprintf("/apps/annotations/%s", annotationId), req)
 	if err != nil {
 		return
 	}

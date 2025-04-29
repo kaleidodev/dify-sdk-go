@@ -228,6 +228,11 @@ func TestChatflowApp(t *testing.T) {
 		t.Logf("resp=%v err=%v", resp, err)
 	})
 
+	t.Run("Chatflow_ConversationVars", func(t *testing.T) {
+		resp, err := client.ChatflowApp().ConversationVars("07869a8b-781b-4363-9cbc-944e6aeb2a8d", "", "", 0)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
 	t.Run("Chatflow_AudioToText", func(t *testing.T) {
 		client.ChatflowApp().AudioToText("", nil, "")
 	})
@@ -257,7 +262,7 @@ func TestChatflowApp(t *testing.T) {
 	})
 
 	t.Run("Chatflow_AnnotationUpdate", func(t *testing.T) {
-		resp, err := client.ChatflowApp().AnnotationUpdate("我的问题222", "aaa", "1aa66cc3-4d38-46ba-b749-640a32fe0adf")
+		resp, err := client.ChatflowApp().AnnotationUpdate("我的问题222", "aaa", "cfc4bf46-2339-4ad7-82f7-2acd2c873a41")
 		t.Logf("resp=%v err=%v", resp, err)
 	})
 

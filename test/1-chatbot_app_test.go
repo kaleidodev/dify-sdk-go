@@ -263,6 +263,11 @@ func TestChatbotApp(t *testing.T) {
 		t.Logf("resp=%v err=%v", resp, err)
 	})
 
+	t.Run("Chatbot_ConversationVars", func(t *testing.T) {
+		resp, err := client.ChatbotApp().ConversationVars("0dc15d8a-d218-44df-9ea1-c807837bea90", "", "", 0)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
 	t.Run("Chatbot_AudioToText", func(t *testing.T) {
 		client.ChatbotApp().AudioToText("", nil, "")
 	})
