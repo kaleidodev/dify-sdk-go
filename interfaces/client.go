@@ -25,6 +25,7 @@ type AppCommon interface {
 	UploadFile(filePath string, f *os.File, user string) (info types.FileInfo, err error)
 	AppInfo() (resp types.AppInfo, err error)
 	AppParameter() (resp types.AppParameter, err error)
+	AppSite() (resp types.AppSite, err error)
 }
 
 // Chatbot Chatbot和Agent类型应用
@@ -42,6 +43,7 @@ type Chatbot interface {
 	AudioToText(filePath string, f *os.File, user string) (text string, err error)
 	TextToAudio(info types.Text2Audio) error
 	AppMeta() (resp types.AppMeta, err error)
+	AppFeedback(page, limit int64) (resp types.AppFeedbackResp, err error)
 }
 
 // Completion 类型应用
@@ -56,6 +58,7 @@ type Completion interface {
 	AnnotationDel(annotationId string) error
 	AnnotationReplySetting(action types.AnnotationAction, setting types.AnnotationSetting) (resp types.AnnotationSettingJobResp, err error)
 	AnnotationReplySettingJobStatus(action types.AnnotationAction, jobId string) (resp types.AnnotationSettingJobStatusResp, err error)
+	AppFeedback(page, limit int64) (resp types.AppFeedbackResp, err error)
 }
 
 // Chatflow  类型应用
@@ -73,7 +76,7 @@ type Chatflow interface {
 	AudioToText(filePath string, f *os.File, user string) (text string, err error)
 	TextToAudio(info types.Text2Audio) error
 	AppMeta() (resp types.AppMeta, err error)
-
+	AppFeedback(page, limit int64) (resp types.AppFeedbackResp, err error)
 	AnnotationList(page, limit int) (resp types.AnnotationListResp, err error)
 	AnnotationCreate(question, answer string) (resp types.Annotation, err error)
 	AnnotationUpdate(question, answer, annotationId string) (resp types.Annotation, err error)

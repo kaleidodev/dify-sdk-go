@@ -230,4 +230,14 @@ func TestCompletionApp(t *testing.T) {
 		resp, err := client.CompletionApp().AnnotationReplySettingJobStatus(types.AnnotationEnable, "0af37662-561b-48ec-977c-c87d4d99b228")
 		t.Logf("resp=%v err=%v", resp, err)
 	})
+
+	t.Run("Completion_AppSite", func(t *testing.T) {
+		resp, err := client.CompletionApp().AppSite()
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Completion_AppFeedback", func(t *testing.T) {
+		resp, err := client.CompletionApp().AppFeedback(1, 20)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
 }

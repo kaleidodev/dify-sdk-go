@@ -17,17 +17,19 @@
 2. POST `/files/upload` 上传文件
 3. POST `/chat-messages/:task_id/stop` 停止响应
 4. POST `/messages/:message_id/feedbacks` 消息反馈(点赞)
-5. GET `/messages/{message_id}/suggested` 获取下一轮建议问题列表
-6. GET `/messages` 获取会话历史消息
-7. GET `/conversations` 获取会话列表
-8. DELETE `/conversations/:conversation_id` 删除会话
-9. POST `/conversations/:conversation_id/name` 会话重命名
-10. GET `/conversations/:conversation_id/variables` 获取对话变量
-11. POST `/audio-to-text` 语音转文字
-12. POST `/text-to-audio` 文字转语音
-13. GET `/info` 获取应用基本信息
-14. GET `/parameters` 获取应用参数
-15. GET `/meta` 获取应用 Meta 信息
+5. GET `/app/feedbacks` 获取APP的消息点赞和反馈
+6. GET `/messages/{message_id}/suggested` 获取下一轮建议问题列表
+7. GET `/messages` 获取会话历史消息
+8. GET `/conversations` 获取会话列表
+9. DELETE `/conversations/:conversation_id` 删除会话
+10. POST `/conversations/:conversation_id/name` 会话重命名
+11. GET `/conversations/:conversation_id/variables` 获取对话变量
+12. POST `/audio-to-text` 语音转文字
+13. POST `/text-to-audio` 文字转语音
+14. GET `/info` 获取应用基本信息
+15. GET `/parameters` 获取应用参数
+16. GET `/meta` 获取应用 Meta 信息
+17. GET `/site` 获取应用 WebApp 设置
 
 #### 2、Completion
 
@@ -35,15 +37,17 @@
 2. POST `/files/upload` 上传文件
 3. POST `/completion-messages/:task_id/stop` 停止响应
 4. POST `/messages/:message_id/feedbacks` 消息反馈(点赞)
-5. POST `/text-to-audio` 文字转语音
-6. GET `/info` 获取应用基本信息
-7. GET `/parameters` 获取应用参数
-8. GET `/apps/annotations` 获取标注列表
-9. POST `/apps/annotations` 创建标注
-10. PUT `/apps/annotations/{annotation_id}` 更新标注
-11. DELETE `/apps/annotations/{annotation_id}` 删除标注
-12. POST `/apps/annotation-reply/{action}` 标注回复初始设置
-13. GET `/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态
+5. GET `/app/feedbacks` 获取APP的消息点赞和反馈
+6. POST `/text-to-audio` 文字转语音
+7. GET `/info` 获取应用基本信息
+8. GET `/parameters` 获取应用参数
+9. GET `/site` 获取应用 WebApp 设置
+10. GET `/apps/annotations` 获取标注列表
+11. POST `/apps/annotations` 创建标注
+12. PUT `/apps/annotations/{annotation_id}` 更新标注
+13. DELETE `/apps/annotations/{annotation_id}` 删除标注
+14. POST `/apps/annotation-reply/{action}` 标注回复初始设置
+15. GET `/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态
 
 #### 3、Chatflow
 
@@ -51,23 +55,25 @@
 2. POST `/files/upload` 上传文件
 3. POST `/chat-messages/:task_id/stop` 停止响应
 4. POST `/messages/:message_id/feedbacks` 消息反馈(点赞)
-5. GET `/messages/{message_id}/suggested` 获取下一轮建议问题列表
-6. GET `/messages` 获取会话历史消息
-7. GET `/conversations` 获取会话列表
-8. DELETE `/conversations/:conversation_id` 删除会话
-9. POST `/conversations/:conversation_id/name` 会话重命名
-10. GET `/conversations/:conversation_id/variables` 获取对话变量
-11. POST `/audio-to-text` 语音转文字
-12. POST `/text-to-audio` 文字转语音
-13. GET `/info` 获取应用基本信息
-14. GET `/parameters` 获取应用参数
-15. GET `/meta` 获取应用 Meta 信息
-16. GET `/apps/annotations` 获取标注列表
-17. POST `/apps/annotations` 创建标注
-18. PUT `/apps/annotations/{annotation_id}` 更新标注
-19. DELETE `/apps/annotations/{annotation_id}` 删除标注
-20. POST `/apps/annotation-reply/{action}` 标注回复初始设置
-21. GET `/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态
+5. GET `/app/feedbacks` 获取APP的消息点赞和反馈
+6. GET `/messages/{message_id}/suggested` 获取下一轮建议问题列表
+7. GET `/messages` 获取会话历史消息
+8. GET `/conversations` 获取会话列表
+9. DELETE `/conversations/:conversation_id` 删除会话
+10. POST `/conversations/:conversation_id/name` 会话重命名
+11. GET `/conversations/:conversation_id/variables` 获取对话变量
+12. POST `/audio-to-text` 语音转文字
+13. POST `/text-to-audio` 文字转语音
+14. GET `/info` 获取应用基本信息
+15. GET `/parameters` 获取应用参数
+16. GET `/meta` 获取应用 Meta 信息
+17. GET `/site` 获取应用 WebApp 设置
+18. GET `/apps/annotations` 获取标注列表
+19. POST `/apps/annotations` 创建标注
+20. PUT `/apps/annotations/{annotation_id}` 更新标注
+21. DELETE `/apps/annotations/{annotation_id}` 删除标注
+22. POST `/apps/annotation-reply/{action}` 标注回复初始设置
+23. GET `/apps/annotation-reply/{action}/status/{job_id}` 查询标注回复初始设置任务状态
 
 #### 4、Workflow
 
@@ -78,6 +84,7 @@
 5. GET `/workflows/logs` 获取 workflow 日志
 6. GET `/info` 获取应用基本信息
 7. GET `/parameters` 获取应用参数
+8. GET `/site` 获取应用 WebApp 设置
 
 ### 应用接口矩阵
 
@@ -95,9 +102,11 @@
 | POST`/files/upload` 上传文件                                                      | 1             | 1          | 1        | 1        | UploadFile                           |
 | GET`/info` 获取应用基本信息                                                       | 1             | 1          | 1        | 1        | AppInfo                              |
 | GET`/parameters` 获取应用参数                                                     | 1             | 1          | 1        | 1        | AppParameter                         |
+| GET`/site` 获取应用 WebApp 设置                                                   | 1             | 1          | 1        | 1        | AppSite                              |
 |                                                                                   |               |            |          |          |                                      |
 | GET`/workflows/run/:workflow_id` 获取 workflow 执行情况                           |               |            |          | 1        | Status                               |
 | POST`/messages/:message_id/feedbacks` 消息反馈(点赞)                              | 1             | 1          | 1        |          | MsgFeedback                          |
+| GET`/app/feedbacks` 获取APP的消息点赞和反馈                                       | 1             | 1          | 1        |          | AppFeedback                          |
 | GET`/messages/{message_id}/suggested` 获取下一轮建议问题列表                      | 1             |            | 1        |          | SuggestQuestionList                  |
 | GET`/messages` 获取会话历史消息                                                   | 1             |            | 1        |          | History/HistoryPro                   |
 | GET`/workflows/logs` 获取 workflow 日志                                           |               |            |          | 1        | Logs                                 |

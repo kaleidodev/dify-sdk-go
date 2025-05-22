@@ -185,4 +185,9 @@ func TestWorkflowApp(t *testing.T) {
 		resp, err := client.WorkflowApp().Logs("", types.StatusStopped, 0, 0)
 		t.Logf("resp=%v err=%v\n", resp, err)
 	})
+
+	t.Run("Workflow_AppSite", func(t *testing.T) {
+		resp, err := client.WorkflowApp().AppSite()
+		t.Logf("resp=%v err=%v", resp, err)
+	})
 }

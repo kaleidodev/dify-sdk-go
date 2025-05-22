@@ -286,4 +286,14 @@ func TestAgentApp(t *testing.T) {
 		resp, err := client.AgentApp().AppMeta()
 		t.Logf("resp=%v err=%v", resp, err)
 	})
+
+	t.Run("Agent_AppSite", func(t *testing.T) {
+		resp, err := client.AgentApp().AppSite()
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Agent_AppFeedback", func(t *testing.T) {
+		resp, err := client.AgentApp().AppFeedback(1, 20)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
 }

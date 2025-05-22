@@ -3,6 +3,7 @@ package base
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -23,6 +24,9 @@ func (c *AppClient) AnnotationDel(annotationId string) error {
 	var resp Resp
 	err = (*Client)(c).HttpClient().SendJSONRequest(httpReq, &resp)
 	if err != nil {
+		if err == io.EOF { // HTTP/1.1 204 NO CONTENT
+			return nil
+		}
 		return err
 	}
 	if resp.Result != "success" {

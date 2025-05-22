@@ -285,4 +285,14 @@ func TestChatbotApp(t *testing.T) {
 		resp, err := client.ChatbotApp().AppMeta()
 		t.Logf("resp=%v err=%v", resp, err)
 	})
+
+	t.Run("Chatbot_AppSite", func(t *testing.T) {
+		resp, err := client.ChatbotApp().AppSite()
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatbot_AppFeedback", func(t *testing.T) {
+		resp, err := client.ChatbotApp().AppFeedback(1, 20)
+		t.Logf("resp=%v err=%v", resp, err)
+	})
 }

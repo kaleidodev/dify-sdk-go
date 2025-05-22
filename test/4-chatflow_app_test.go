@@ -214,7 +214,7 @@ func TestChatflowApp(t *testing.T) {
 	})
 
 	t.Run("Chatflow_ConversationDel", func(t *testing.T) {
-		err := client.ChatflowApp().ConversationDel("adc2ad24-fa4e-4dbb-8c16-ead1eaaa6c38", "")
+		err := client.ChatflowApp().ConversationDel("16429b25-3494-4898-8c1f-fe571c9e1696", "")
 		t.Logf("err=%v", err)
 	})
 
@@ -267,7 +267,7 @@ func TestChatflowApp(t *testing.T) {
 	})
 
 	t.Run("Chatflow_AnnotationDel", func(t *testing.T) {
-		err := client.ChatflowApp().AnnotationDel("1aa66cc3-4d38-46ba-b749-640a32fe0adf")
+		err := client.ChatflowApp().AnnotationDel("cfc4bf46-2339-4ad7-82f7-2acd2c873a41")
 		t.Logf("err=%v", err)
 	})
 
@@ -282,6 +282,16 @@ func TestChatflowApp(t *testing.T) {
 
 	t.Run("Chatflow_AnnotationReplySettingJobStatus", func(t *testing.T) {
 		resp, err := client.ChatflowApp().AnnotationReplySettingJobStatus(types.AnnotationEnable, "4f2adf84-73db-4590-9194-8e0cb0e8c97a")
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatflow_AppSite", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AppSite()
+		t.Logf("resp=%v err=%v", resp, err)
+	})
+
+	t.Run("Chatflow_AppFeedback", func(t *testing.T) {
+		resp, err := client.ChatflowApp().AppFeedback(1, 20)
 		t.Logf("resp=%v err=%v", resp, err)
 	})
 }

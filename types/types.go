@@ -16,6 +16,42 @@ type AppInfo struct {
 	Tags        []string `json:"tags"`        // 应用标签
 }
 
+type AppSite struct {
+	Title             string `json:"title"`               // WebApp 名称
+	IconType          string `json:"icon_type"`           // 图标类型, emoji-表情, image-图片
+	Icon              string `json:"icon"`                // 图标, 如果是emoji类型, 则是emoji表情符号, 如果是image类型, 则是图片URL
+	IconBackground    string `json:"icon_background"`     // hex 格式的背景色
+	IconUrl           string `json:"icon_url"`            // 图标URL
+	Description       string `json:"description"`         // 描述
+	Copyright         string `json:"copyright"`           // 版权信息
+	PrivacyPolicy     string `json:"privacy_policy"`      // 隐私政策链接
+	CustomDisclaimer  string `json:"custom_disclaimer"`   // 自定义免责声明
+	DefaultLanguage   string `json:"default_language"`    // 默认语言
+	ShowWorkflowSteps bool   `json:"show_workflow_steps"` // 是否显示工作流详情
+
+	ChatColorTheme         string `json:"chat_color_theme,omitempty"`          // [workflow无该项]聊天颜色主题, hex格式
+	ChatColorThemeInverted bool   `json:"chat_color_theme_inverted,omitempty"` // [workflow无该项]聊天颜色主题是否反转
+	UseIconAsAnswerIcon    bool   `json:"use_icon_as_answer_icon,omitempty"`   // [workflow无该项]是否使用 WebApp 图标替换聊天中的🤖
+}
+
+type AppFeedback struct {
+	Id             string      `json:"id"`
+	AppId          string      `json:"app_id"`
+	ConversationId string      `json:"conversation_id"`
+	MessageId      string      `json:"message_id"`
+	Rating         Feedback    `json:"rating"`
+	Content        string      `json:"content"`
+	FromSource     string      `json:"from_source"`
+	FromEndUserId  string      `json:"from_end_user_id"`
+	FromAccountId  interface{} `json:"from_account_id"`
+	CreatedAt      string      `json:"created_at"`
+	UpdatedAt      string      `json:"updated_at"`
+}
+
+type AppFeedbackResp struct {
+	Data []AppFeedback `json:"data"`
+}
+
 type AppParameter struct {
 	OpeningStatement              string   `json:"opening_statement"`   //开场白
 	SuggestedQuestions            []string `json:"suggested_questions"` // 开场推荐问题列表
@@ -168,7 +204,7 @@ type MessageHistory struct {
 			ChainId     interface{} `json:"chain_id"`
 			Files       []File      `json:"files"`
 			ToolLabels  interface{} `json:"tool_labels"`
-		} `json:"agent_thoughts,omitempty"` //Agent思考内容 仅Agent类型有该内容
+		} `json:"agent_thoughts,omitempty"`            //Agent思考内容 仅Agent类型有该内容
 		Answer             string      `json:"answer"` // 回答消息内容
 		CreatedAt          int64       `json:"created_at"`
 		Feedback           interface{} `json:"feedback"` //  反馈信息
@@ -368,7 +404,7 @@ type WorkflowLogs struct {
 			TotalSteps  int     `json:"total_steps"`     // 执行步骤长度
 			CreatedAt   int64   `json:"created_at"`      // 开始时间
 			FinishedAt  int64   `json:"finished_at"`     // 结束时间
-		} `json:"workflow_run"` // Workflow 执行日志
+		} `json:"workflow_run"`                                       // Workflow 执行日志
 		CreatedFrom      string `json:"created_from"`                 // 来源
 		CreatedByRole    string `json:"created_by_role"`              // 角色
 		CreatedByAccount string `json:"created_by_account,omitempty"` // 帐号
@@ -377,7 +413,7 @@ type WorkflowLogs struct {
 			Type        string `json:"type"`         // 类型
 			IsAnonymous bool   `json:"is_anonymous"` // 是否匿名
 			SessionId   string `json:"session_id"`   // 会话标识
-		} `json:"created_by_end_user"` // 用户
+		} `json:"created_by_end_user"`      // 用户
 		CreatedAt int64 `json:"created_at"` // 创建时间
 	} `json:"data"`
 }
