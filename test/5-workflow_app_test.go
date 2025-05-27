@@ -77,16 +77,24 @@ func TestWorkflowApp(t *testing.T) {
 			ResponseMode: "",
 			User:         "",
 		}).SimplePrint()
-		for {
-			select {
-			case msg, ok := <-eventCh:
-				if !ok {
-					fmt.Printf("本次会话conversationId=%s", *conversationId)
-					return
-				}
-				fmt.Printf("%s", msg)
-			}
+		
+		// 方式一
+		for msg := range eventCh {
+			fmt.Printf("%s", msg)
 		}
+		fmt.Printf("\n本次会话conversationId=%s\n", *conversationId)
+
+		// 方式二
+		//for {
+		//	select {
+		//	case msg, ok := <-eventCh:
+		//		if !ok {
+		//			fmt.Printf("\n本次会话conversationId=%s\n", *conversationId)
+		//			return
+		//		}
+		//		fmt.Printf("%s", msg)
+		//	}
+		//}
 	})
 
 	t.Run("Workflow_Run_ParseToEventCh", func(t *testing.T) {
