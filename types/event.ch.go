@@ -60,8 +60,10 @@ func (c *EventCh) ParseToStructCh() <-chan ChunkChatCompletionResponse {
 }
 
 // SimplePrint 仅输出最终文字结果
-func (c *EventCh) SimplePrint() <-chan string {
+func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 	streamChannel := make(chan string, 500)
+	id := ""
+	conversationId = &id
 
 	go func() {
 		defer func() {
@@ -92,10 +94,18 @@ func (c *EventCh) SimplePrint() <-chan string {
 				case EVENT_MESSAGE:
 					eventData := event.Data.(*EventMessage)
 					str = eventData.Answer
+
+					if id == "" && eventData.ConversationId != "" {
+						id = eventData.ConversationId
+					}
 				case EVENT_MESSAGE_END:
 				case EVENT_TTS_MESSAGE:
 					eventData := event.Data.(*EventTtsMessage)
 					str = eventData.Audio
+
+					if id == "" && eventData.ConversationId != "" {
+						id = eventData.ConversationId
+					}
 				case EVENT_TTS_MESSAGE_END:
 				case EVENT_MESSAGE_FILE:
 				case EVENT_MESSAGE_REPLACE:
@@ -106,9 +116,17 @@ func (c *EventCh) SimplePrint() <-chan string {
 					if eventData.Thought != "" && eventData.Observation != "" {
 						str = fmt.Sprintf("使用工具: \"%s\"\n请求：%s\n响应: %s\n", eventData.Tool, eventData.ToolInput, eventData.Observation)
 					}
+
+					if id == "" && eventData.ConversationId != "" {
+						id = eventData.ConversationId
+					}
 				case EVENT_AGENT_MESSAGE:
 					eventData := event.Data.(*EventAgentMessage)
 					str = eventData.Answer
+
+					if id == "" && eventData.ConversationId != "" {
+						id = eventData.ConversationId
+					}
 				case EVENT_WORKFLOW_STARTED:
 				case EVENT_WORKFLOW_FINISHED:
 					eventData := event.Data.(*EventWorkflowFinished)
@@ -116,6 +134,10 @@ func (c *EventCh) SimplePrint() <-chan string {
 						str = fmt.Sprintf("%s%s:%s,", str, k, v)
 					}
 					str = strings.TrimSuffix(str, ",")
+
+					if id == "" && eventData.WorkflowRunId != "" {
+						id = eventData.WorkflowRunId
+					}
 				case EVENT_NODE_STARTED:
 				case EVENT_NODE_FINISHED:
 				case EVENT_NODE_RETRY:
@@ -145,7 +167,7 @@ func (c *EventCh) SimplePrint() <-chan string {
 		}
 	}()
 
-	return streamChannel
+	return streamChannel, conversationId
 }
 
 // ParseToEventCh 将事件按事件类型解析为不同的结构体(字段更准确、冗余少)

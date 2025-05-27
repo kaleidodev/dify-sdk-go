@@ -158,7 +158,7 @@ func (c *HttpClient) SendRequest(req *http.Request) (*http.Response, error) {
 			"code": "unknown"
 			}
 		*/
-		time.Sleep(time.Second * 1)
+		time.Sleep(time.Second * 2)
 		log.Println("[Warn] 服务端响应状态码500 执行重试逻辑 ...")
 		return c.httpClient.Do(req)
 	}

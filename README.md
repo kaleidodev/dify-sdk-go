@@ -229,12 +229,13 @@ func ParseToStructChDemo(ctx context.Context, client *base.Client, request types
 
 // SimplePrint调用示例
 func SimplePrintDemo(ctx context.Context, client *base.Client, request types.ChatRequest) {
-	eventCh := client.AgentApp().Run(ctx, request).SimplePrint()
+  eventCh, conversationId := client.AgentApp().Run(ctx, request).SimplePrint()
 	for {
 		select {
 		case msg, ok := <-eventCh:
 			// 这里的msg是字符串
 			if !ok {
+                fmt.Printf("本次会话conversationId=%s", *conversationId)
 				return
 			}
 			fmt.Printf("%s", msg)

@@ -72,7 +72,7 @@ func TestWorkflowApp(t *testing.T) {
 		input["arg2"] = "test2"
 		input["arg1"] = "test1"
 
-		eventCh := client.DebugOff().WorkflowApp().Run(ctx, types.WorkflowRequest{
+		eventCh, conversationId := client.DebugOff().WorkflowApp().Run(ctx, types.WorkflowRequest{
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
@@ -81,6 +81,7 @@ func TestWorkflowApp(t *testing.T) {
 			select {
 			case msg, ok := <-eventCh:
 				if !ok {
+					fmt.Printf("本次会话conversationId=%s", *conversationId)
 					return
 				}
 				fmt.Printf("%s", msg)
