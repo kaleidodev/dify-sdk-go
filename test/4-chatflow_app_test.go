@@ -77,7 +77,7 @@ func TestChatflowApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		eventCh, conversationId := client.DebugOff().ChatflowApp().Run(ctx, types.ChatRequest{
+		eventCh, conversationId := client.DebugOn().ChatflowApp().Run(ctx, types.ChatRequest{
 			Query:            "你知道现在的时间以及星期么？",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -86,7 +86,7 @@ func TestChatflowApp(t *testing.T) {
 			Files:            nil,
 			AutoGenerateName: nil,
 		}).SimplePrint()
-		
+
 		// 方式一
 		for msg := range eventCh {
 			fmt.Printf("%s", msg)

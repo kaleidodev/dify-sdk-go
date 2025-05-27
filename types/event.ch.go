@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 )
 
 type EventCh struct {
@@ -130,10 +129,12 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 				case EVENT_WORKFLOW_STARTED:
 				case EVENT_WORKFLOW_FINISHED:
 					eventData := event.Data.(*EventWorkflowFinished)
-					for k, v := range eventData.Data.Outputs {
-						str = fmt.Sprintf("%s%s:%s,", str, k, v)
-					}
-					str = strings.TrimSuffix(str, ",")
+					
+					// 这部分内容实际上是前面内容的重复，先不输出
+					//for _, v := range eventData.Data.Outputs {
+					//	str = fmt.Sprintf("%s%s,", str, v)
+					//}
+					//str = strings.TrimSuffix(str, ",")
 
 					if id == "" && eventData.WorkflowRunId != "" {
 						id = eventData.WorkflowRunId
