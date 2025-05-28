@@ -149,16 +149,37 @@ func (c *HttpClient) SendRawRequest(ctx context.Context, method, apiUrl string, 
 }
 
 func (c *HttpClient) SendRequest(req *http.Request) (*http.Response, error) {
+	/*  服务端长时间空闲后首次请求可能会失败
+	HTTP/1.1 500 INTERNAL SERVER ERROR
+	{
+	"message": "Internal Server Error",
+	"code": "unknown"
+	}
+	*/
+
+	// 如果有请求体，需要先保存内容以便重试
+	var bodyBytes []byte
+	if req.Body != nil {
+		var err error
+		bodyBytes, err = io.ReadAll(req.Body)
+		if err != nil {
+			return nil, err
+		}
+		req.Body.Close()
+
+		// 重新设置第一次请求的 Body
+		req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+	}
+
 	resp, err := c.httpClient.Do(req)
-	if resp != nil && resp.StatusCode == http.StatusInternalServerError { // 解决服务端长时间空闲后首次请求失败的问题
-		/*
-			HTTP/1.1 500 INTERNAL SERVER ERROR
-			{
-			"message": "Internal Server Error",
-			"code": "unknown"
-			}
-		*/
-		time.Sleep(time.Second * 2)
+
+	// 如果响应状态码是 500，进行重试
+	if resp != nil && resp.StatusCode == http.StatusInternalServerError {
+		// 如果有请求体，重新设置 Body 用于重试
+		if bodyBytes != nil {
+			req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+		}
+		time.Sleep(time.Second * 1)
 		log.Println("[Warn] 服务端响应状态码500 执行重试逻辑 ...")
 		return c.httpClient.Do(req)
 	}

@@ -81,7 +81,7 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 
 				event, err := c.processEvent(data)
 				if err != nil {
-					log.Printf("Error processing event: %v", err)
+					log.Printf("Error processing event: %v data: %s", err, string(data))
 					continue
 				}
 
@@ -89,7 +89,7 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 				switch event.Type {
 				case EVENT_ERROR:
 					eventData := event.Data.(*EventError)
-					str = fmt.Sprintf("哦豁,请求出错了: Status=%d Code=%s Message=%s", eventData.Status, eventData.Code, eventData.Message)
+					str = fmt.Sprintf("糟糕,请求出错了! Status: %d Code: %s Message: %s", eventData.Status, eventData.Code, eventData.Message)
 				case EVENT_MESSAGE:
 					eventData := event.Data.(*EventMessage)
 					str = eventData.Answer
@@ -113,7 +113,7 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 				case EVENT_AGENT_THOUGHT:
 					eventData := event.Data.(*EventAgentThought)
 					if eventData.Thought != "" && eventData.Observation != "" {
-						str = fmt.Sprintf("使用工具: \"%s\"\n请求：%s\n响应: %s\n", eventData.Tool, eventData.ToolInput, eventData.Observation)
+						str = fmt.Sprintf("  \n> **调用工具: %s** \n```json\n// 请求：\n%s\n\n// 响应:\n%s\n```  \n", eventData.Tool, eventData.ToolInput, eventData.Observation)
 					}
 
 					if id == "" && eventData.ConversationId != "" {
@@ -129,7 +129,7 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 				case EVENT_WORKFLOW_STARTED:
 				case EVENT_WORKFLOW_FINISHED:
 					eventData := event.Data.(*EventWorkflowFinished)
-					
+
 					// 这部分内容实际上是前面内容的重复，先不输出
 					//for _, v := range eventData.Data.Outputs {
 					//	str = fmt.Sprintf("%s%s,", str, v)
@@ -192,7 +192,7 @@ func (c *EventCh) ParseToEventCh() <-chan Event {
 
 				event, err := c.processEvent(data)
 				if err != nil {
-					log.Printf("Error processing event: %v", err)
+					log.Printf("Error processing event: %v data: %s", err, string(data))
 					continue
 				}
 
