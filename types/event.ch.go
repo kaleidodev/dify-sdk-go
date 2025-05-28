@@ -112,7 +112,7 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId *string) {
 					str = fmt.Sprintf("\n%s\n", eventData.Answer)
 				case EVENT_AGENT_THOUGHT:
 					eventData := event.Data.(*EventAgentThought)
-					if eventData.Thought != "" && eventData.Observation != "" {
+					if eventData.Observation != "" {
 						str = fmt.Sprintf("  \n> **调用工具: %s** \n```json\n// 请求：\n%s\n\n// 响应:\n%s\n```  \n", eventData.Tool, eventData.ToolInput, eventData.Observation)
 					}
 
