@@ -73,26 +73,26 @@ func TestCompletionApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		eventCh, conversationId := client.DebugOff().CompletionApp().Run(ctx, types.CompletionRequest{
+		eventCh, conversationId, taskId := client.DebugOff().CompletionApp().Run(ctx, types.CompletionRequest{
 			Query:        "你知道现在的时间以及星期么？",
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
 			Files:        nil,
 		}).SimplePrint()
-		
+
 		// 方式一
 		for msg := range eventCh {
 			fmt.Printf("%s", msg)
 		}
-		fmt.Printf("\n本次会话conversationId=%s\n", *conversationId)
+		fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
 
 		// 方式二
 		//for {
 		//	select {
 		//	case msg, ok := <-eventCh:
 		//		if !ok {
-		//			fmt.Printf("\n本次会话conversationId=%s\n", *conversationId)
+		//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
 		//			return
 		//		}
 		//		fmt.Printf("%s", msg)
