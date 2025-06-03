@@ -127,5 +127,8 @@
 
 ### dify 接口 api 文档
 
-源码路径：dify/web/app/components/develop/template/ & dify/api/core/app/entities/task_entities.py
+源码路径：  
+1、dify/web/app/components/develop/template/  
+2、dify/api/core/app/entities/task_entities.py  
+3、dify/api/controllers/service_api/app/  
 每个版本的放于本目录相头版本号文件夹内
