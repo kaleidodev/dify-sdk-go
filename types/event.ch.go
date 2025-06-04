@@ -58,13 +58,16 @@ func (c *EventCh) ParseToStructCh() <-chan ChunkChatCompletionResponse {
 	return streamChannel
 }
 
+type Meta struct {
+	ConversationId string `json:"conversationId"` // 会话id，用于多论会话
+	TaskId         string `json:"taskId"`         // 任务id，用于中止输出
+	MessageId      string `json:"messageId"`      // 消息id，用于消息反馈
+}
+
 // SimplePrint 仅输出最终文字结果
-func (c *EventCh) SimplePrint() (ch <-chan string, conversationId, taskId *string) {
+func (c *EventCh) SimplePrint() (ch <-chan string, meta *Meta) {
 	streamChannel := make(chan string, 500)
-	id := ""
-	taskid := ""
-	taskId = &taskid
-	conversationId = &id
+	meta = &Meta{}
 
 	go func() {
 		defer func() {
@@ -96,22 +99,28 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId, taskId *strin
 					eventData := event.Data.(*EventMessage)
 					str = eventData.Answer
 
-					if id == "" && eventData.ConversationId != "" {
-						id = eventData.ConversationId
+					if meta.ConversationId == "" && eventData.ConversationId != "" {
+						meta.ConversationId = eventData.ConversationId
 					}
-					if taskid == "" && eventData.TaskId != "" {
-						taskid = eventData.TaskId
+					if meta.TaskId == "" && eventData.TaskId != "" {
+						meta.TaskId = eventData.TaskId
+					}
+					if meta.MessageId == "" && eventData.MessageId != "" {
+						meta.MessageId = eventData.MessageId
 					}
 				case EVENT_MESSAGE_END:
 				case EVENT_TTS_MESSAGE:
 					eventData := event.Data.(*EventTtsMessage)
 					str = eventData.Audio
 
-					if id == "" && eventData.ConversationId != "" {
-						id = eventData.ConversationId
+					if meta.ConversationId == "" && eventData.ConversationId != "" {
+						meta.ConversationId = eventData.ConversationId
 					}
-					if taskid == "" && eventData.TaskId != "" {
-						taskid = eventData.TaskId
+					if meta.TaskId == "" && eventData.TaskId != "" {
+						meta.TaskId = eventData.TaskId
+					}
+					if meta.MessageId == "" && eventData.MessageId != "" {
+						meta.MessageId = eventData.MessageId
 					}
 				case EVENT_TTS_MESSAGE_END:
 				case EVENT_MESSAGE_FILE:
@@ -124,21 +133,27 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId, taskId *strin
 						str = fmt.Sprintf("  \n> **调用工具: %s** \n```json\n// 请求：\n%s\n\n// 响应:\n%s\n```  \n", eventData.Tool, eventData.ToolInput, eventData.Observation)
 					}
 
-					if id == "" && eventData.ConversationId != "" {
-						id = eventData.ConversationId
+					if meta.ConversationId == "" && eventData.ConversationId != "" {
+						meta.ConversationId = eventData.ConversationId
 					}
-					if taskid == "" && eventData.TaskId != "" {
-						taskid = eventData.TaskId
+					if meta.TaskId == "" && eventData.TaskId != "" {
+						meta.TaskId = eventData.TaskId
+					}
+					if meta.MessageId == "" && eventData.MessageId != "" {
+						meta.MessageId = eventData.MessageId
 					}
 				case EVENT_AGENT_MESSAGE:
 					eventData := event.Data.(*EventAgentMessage)
 					str = eventData.Answer
 
-					if id == "" && eventData.ConversationId != "" {
-						id = eventData.ConversationId
+					if meta.ConversationId == "" && eventData.ConversationId != "" {
+						meta.ConversationId = eventData.ConversationId
 					}
-					if taskid == "" && eventData.TaskId != "" {
-						taskid = eventData.TaskId
+					if meta.TaskId == "" && eventData.TaskId != "" {
+						meta.TaskId = eventData.TaskId
+					}
+					if meta.MessageId == "" && eventData.MessageId != "" {
+						meta.MessageId = eventData.MessageId
 					}
 				case EVENT_WORKFLOW_STARTED:
 				case EVENT_WORKFLOW_FINISHED:
@@ -150,11 +165,11 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId, taskId *strin
 					//}
 					//str = strings.TrimSuffix(str, ",")
 
-					if id == "" && eventData.WorkflowRunId != "" {
-						id = eventData.WorkflowRunId
+					if meta.ConversationId == "" && eventData.WorkflowRunId != "" {
+						meta.ConversationId = eventData.WorkflowRunId
 					}
-					if taskid == "" && eventData.TaskId != "" {
-						taskid = eventData.TaskId
+					if meta.TaskId == "" && eventData.TaskId != "" {
+						meta.TaskId = eventData.TaskId
 					}
 				case EVENT_NODE_STARTED:
 				case EVENT_NODE_FINISHED:
@@ -185,7 +200,7 @@ func (c *EventCh) SimplePrint() (ch <-chan string, conversationId, taskId *strin
 		}
 	}()
 
-	return streamChannel, conversationId, taskId
+	return streamChannel, meta
 }
 
 // ParseToEventCh 将事件按事件类型解析为不同的结构体(字段更准确、冗余少)

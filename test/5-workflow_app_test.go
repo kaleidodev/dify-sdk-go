@@ -72,7 +72,7 @@ func TestWorkflowApp(t *testing.T) {
 		input["arg2"] = "test2"
 		input["arg1"] = "test1"
 
-		eventCh, conversationId, taskId := client.DebugOff().WorkflowApp().Run(ctx, types.WorkflowRequest{
+		eventCh, meta := client.DebugOff().WorkflowApp().Run(ctx, types.WorkflowRequest{
 			Inputs:       input,
 			ResponseMode: "",
 			User:         "",
@@ -82,14 +82,14 @@ func TestWorkflowApp(t *testing.T) {
 		for msg := range eventCh {
 			fmt.Printf("%s", msg)
 		}
-		fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
+		fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", meta.ConversationId, meta.TaskId)
 
 		// 方式二
 		//for {
 		//	select {
 		//	case msg, ok := <-eventCh:
 		//		if !ok {
-		//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
+		//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", meta.ConversationId, meta.TaskId)
 		//			return
 		//		}
 		//		fmt.Printf("%s", msg)

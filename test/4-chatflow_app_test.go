@@ -77,7 +77,7 @@ func TestChatflowApp(t *testing.T) {
 		input := make(map[string]interface{})
 		input["name"] = "张三"
 
-		eventCh, conversationId, taskId := client.DebugOn().ChatflowApp().Run(ctx, types.ChatRequest{
+		eventCh, meta := client.DebugOn().ChatflowApp().Run(ctx, types.ChatRequest{
 			Query:            "你知道现在的时间以及星期么？",
 			Inputs:           input,
 			ResponseMode:     "",
@@ -91,14 +91,14 @@ func TestChatflowApp(t *testing.T) {
 		for msg := range eventCh {
 			fmt.Printf("%s", msg)
 		}
-		fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
+		fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", meta.ConversationId, meta.TaskId)
 
 		// 方式二
 		//for {
 		//	select {
 		//	case msg, ok := <-eventCh:
 		//		if !ok {
-		//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
+		//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", meta.ConversationId, meta.TaskId)
 		//			return
 		//		}
 		//		fmt.Printf("%s", msg)

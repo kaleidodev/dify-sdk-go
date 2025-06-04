@@ -70,20 +70,20 @@ func ParseToStructChDemo(ctx context.Context, client *base.Client, request types
 
 // SimplePrint调用示例
 func SimplePrintDemo(ctx context.Context, client *base.Client, request types.ChatRequest) {
-	eventCh, conversationId, taskId := client.AgentApp().Run(ctx, request).SimplePrint()
+	eventCh, meta := client.AgentApp().Run(ctx, request).SimplePrint()
 
 	// 方式一
 	for msg := range eventCh {
 		fmt.Printf("%s", msg)
 	}
-	fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, taskId)
+	fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", meta.ConversationId, meta.TaskId)
 
 	// 方式二
 	//for {
 	//	select {
 	//	case msg, ok := <-eventCh:
 	//		if !ok {
-	//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", *conversationId, *taskId)
+	//			fmt.Printf("\n本次会话conversationId=%s taskId=%s\n", meta.ConversationId, meta.TaskId)
 	//			return
 	//		}
 	//		fmt.Printf("%s", msg)
