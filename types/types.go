@@ -15,6 +15,7 @@ type AppInfo struct {
 	Description string   `json:"description"` // 应用描述
 	Tags        []string `json:"tags"`        // 应用标签
 	Mode        string   `json:"mode"`        // 应用类型 chat->Chatbot, agent-chat->Agent, completion->Completion, advanced-chat->Chatflow, workflow->Workflow
+	AuthorName  string   `json:"author_name"` // 作者名称
 }
 
 type AppSite struct {
