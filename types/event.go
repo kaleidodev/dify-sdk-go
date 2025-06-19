@@ -112,11 +112,10 @@ type EventWorkflowStarted struct {
 	WorkflowAppStreamResponse // workflow_run_id
 
 	Data struct {
-		Id             string                 `json:"id"`              // workflow 执行 ID
-		WorkflowId     string                 `json:"workflow_id"`     // 关联 Workflow ID
-		SequenceNumber int                    `json:"sequence_number"` // 自增序号，App 内自增，从 1 开始
-		Inputs         map[string]interface{} `json:"inputs"`          // 节点中所有使用到的前置节点变量内容
-		CreatedAt      int64                  `json:"created_at"`      // 开始时间
+		Id         string                 `json:"id"`          // workflow 执行 ID
+		WorkflowId string                 `json:"workflow_id"` // 关联 Workflow ID
+		Inputs     map[string]interface{} `json:"inputs"`      // 节点中所有使用到的前置节点变量内容
+		CreatedAt  int64                  `json:"created_at"`  // 开始时间
 	} `json:"data"`
 }
 
@@ -128,7 +127,6 @@ type EventWorkflowFinished struct {
 	Data struct {
 		Id              string                 `json:"id"`
 		WorkflowId      string                 `json:"workflow_id"`
-		SequenceNumber  int                    `json:"sequence_number"`
 		Status          string                 `json:"status"`
 		Outputs         map[string]interface{} `json:"outputs,omitempty"`
 		Error           string                 `json:"error,omitempty"`
