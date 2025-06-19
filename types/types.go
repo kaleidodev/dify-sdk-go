@@ -206,7 +206,7 @@ type MessageHistory struct {
 			ChainId     interface{} `json:"chain_id"`
 			Files       []File      `json:"files"`
 			ToolLabels  interface{} `json:"tool_labels"`
-		} `json:"agent_thoughts,omitempty"`            //Agent思考内容 仅Agent类型有该内容
+		} `json:"agent_thoughts,omitempty"` //Agent思考内容 仅Agent类型有该内容
 		Answer             string      `json:"answer"` // 回答消息内容
 		CreatedAt          int64       `json:"created_at"`
 		Feedback           interface{} `json:"feedback"` //  反馈信息
@@ -405,7 +405,7 @@ type WorkflowLogs struct {
 			TotalSteps  int     `json:"total_steps"`     // 执行步骤长度
 			CreatedAt   int64   `json:"created_at"`      // 开始时间
 			FinishedAt  int64   `json:"finished_at"`     // 结束时间
-		} `json:"workflow_run"`                                       // Workflow 执行日志
+		} `json:"workflow_run"` // Workflow 执行日志
 		CreatedFrom      string `json:"created_from"`                 // 来源
 		CreatedByRole    string `json:"created_by_role"`              // 角色
 		CreatedByAccount string `json:"created_by_account,omitempty"` // 帐号
@@ -414,7 +414,7 @@ type WorkflowLogs struct {
 			Type        string `json:"type"`         // 类型
 			IsAnonymous bool   `json:"is_anonymous"` // 是否匿名
 			SessionId   string `json:"session_id"`   // 会话标识
-		} `json:"created_by_end_user"`      // 用户
+		} `json:"created_by_end_user"` // 用户
 		CreatedAt int64 `json:"created_at"` // 创建时间
 	} `json:"data"`
 }
