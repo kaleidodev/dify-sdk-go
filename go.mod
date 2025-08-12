@@ -1,3 +1,3 @@
-module github.com/safejob/dify-sdk-go
+module github.com/kaleidodev/dify-sdk-goo
 
 go 1.23.7
