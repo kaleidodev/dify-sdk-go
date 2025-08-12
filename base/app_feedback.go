@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // AppFeedback 获取APP的消息点赞和反馈

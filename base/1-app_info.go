@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // AppInfo 获取应用基本信息

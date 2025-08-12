@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/safejob/dify-sdk-go/base"
+	"github.com/kaleidodev/dify-sdk-go/base"
 )
 
 type ClientConfig struct {

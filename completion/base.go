@@ -1,6 +1,6 @@
 package completion
 
-import "github.com/safejob/dify-sdk-go/interfaces"
+import "github.com/kaleidodev/dify-sdk-go/interfaces"
 
 type App struct {
 	client interfaces.ClientInterface

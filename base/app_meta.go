@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // AppMeta 获取应用Meta信息(获取工具icon)

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // AnnotationReplySettingJobStatus 查询标注回复初始设置任务状态

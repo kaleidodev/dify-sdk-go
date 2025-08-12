@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // ClientInterface http工具函数

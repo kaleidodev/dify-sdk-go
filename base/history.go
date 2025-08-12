@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // History 获取会话历史消息(倒序返回20条)
@@ -22,7 +22,7 @@ func (c *AppClient) HistoryPro(conversationId, user, firstId string, limit int64
 	if user == "" {
 		user = c.GetUser()
 	}
-	
+
 	if limit <= 0 {
 		limit = 20
 	}

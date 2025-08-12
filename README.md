@@ -119,8 +119,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/safejob/dify-sdk-go"
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 func main() {
@@ -164,9 +164,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/safejob/dify-sdk-go"
-	"github.com/safejob/dify-sdk-go/base"
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go"
+	"github.com/kaleidodev/dify-sdk-go/base"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 func main() {

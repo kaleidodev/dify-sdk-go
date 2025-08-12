@@ -1,7 +1,7 @@
 package chatbot
 
 import (
-	"github.com/safejob/dify-sdk-go/interfaces"
+	"github.com/kaleidodev/dify-sdk-go/interfaces"
 )
 
 type App struct {

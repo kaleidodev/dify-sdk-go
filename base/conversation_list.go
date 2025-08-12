@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // ConversationList 获取会话列表
@@ -23,7 +23,7 @@ func (c *AppClient) ConversationListPro(user, lastId, sortBy string, limit int64
 	if user == "" {
 		user = c.GetUser()
 	}
-	
+
 	if limit <= 0 {
 		limit = 20
 	}

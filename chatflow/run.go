@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // Run 发送对话消息(流式)

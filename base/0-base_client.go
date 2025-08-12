@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/safejob/dify-sdk-go/chatbot"
-	"github.com/safejob/dify-sdk-go/chatflow"
-	"github.com/safejob/dify-sdk-go/completion"
-	"github.com/safejob/dify-sdk-go/workflow"
+	"github.com/kaleidodev/dify-sdk-go/chatbot"
+	"github.com/kaleidodev/dify-sdk-go/chatflow"
+	"github.com/kaleidodev/dify-sdk-go/completion"
+	"github.com/kaleidodev/dify-sdk-go/workflow"
 )
 
 type Client struct {

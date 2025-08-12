@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 func (c *AppClient) UploadFile(filePath string, f *os.File, user string) (info types.FileInfo, err error) {

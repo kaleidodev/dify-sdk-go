@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/safejob/dify-sdk-go"
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 func TestChatflowApp(t *testing.T) {

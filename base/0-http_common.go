@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 func (c *HttpClient) GetApiServer() string {

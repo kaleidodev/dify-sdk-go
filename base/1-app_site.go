@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/safejob/dify-sdk-go/types"
+	"github.com/kaleidodev/dify-sdk-go/types"
 )
 
 // AppSite 获取应用 WebApp 设置
